@@ -1,0 +1,1655 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>系統服務發展部(導入&客服)工作總覽</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Noto+Sans+TC:wght@300;400;500;600&family=Playfair+Display:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{
+  --white:#fff;--bg:#f5f4f0;--bg2:#eeece6;--card:#fff;
+  --border:#e2dfd8;--border2:#d0cdc4;
+  --ink:#1a1916;--ink2:#4a4844;--ink3:#9a9690;--ink4:#c8c5be;
+  --accent:#2a6049;--accent2:#c8873a;--accent3:#c94f3a;
+  --alight:#e8f2ed;--blue:#3a6ac8;
+  --up:#2e7d32;--upbg:#e8f5e9;--dn:#c62828;--dnbg:#fde8e8;
+  --sb-full:224px;--sb-mini:52px;--header:56px;
+  --r:12px;--rsm:8px;
+  --sh:0 1px 3px rgba(0,0,0,.06),0 4px 16px rgba(0,0,0,.04);
+  --shh:0 4px 12px rgba(0,0,0,.1),0 8px 32px rgba(0,0,0,.06);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:'Noto Sans TC',sans-serif;font-size:14px;line-height:1.6;display:flex;flex-direction:column;min-height:100vh}
+.header{height:var(--header);background:var(--white);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 20px;position:sticky;top:0;z-index:200;box-shadow:0 2px 8px rgba(0,0,0,.04);flex-shrink:0}
+.hl{display:flex;align-items:center;gap:12px}
+.logo{width:32px;height:32px;background:var(--accent);border-radius:7px;display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Noto Serif TC',serif;font-size:14px;font-weight:700;flex-shrink:0}
+.site-name{font-family:'Noto Serif TC',serif;font-size:14px;font-weight:600}
+.site-tag{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ink3);background:var(--bg2);padding:2px 7px;border-radius:4px}
+.hr{display:flex;align-items:center;gap:8px}
+.ctrl-g{display:flex;align-items:center;gap:5px}
+.ctrl-label{font-size:11px;color:var(--ink3)}
+select.ctrl{background:var(--bg);border:1px solid var(--border2);border-radius:6px;padding:4px 9px;font-family:'Noto Sans TC',sans-serif;font-size:12px;color:var(--ink);cursor:pointer;outline:none}
+select.ctrl:focus{border-color:var(--accent)}
+.hdivider{width:1px;height:18px;background:var(--border)}
+.view-toggle{display:flex;background:var(--bg2);border:1px solid var(--border);border-radius:7px;padding:3px;gap:2px}
+.vbtn{padding:3px 12px;border:none;border-radius:5px;font-family:'Noto Sans TC',sans-serif;font-size:12px;font-weight:500;cursor:pointer;transition:all .18s;background:transparent;color:var(--ink3)}
+.vbtn.active{background:var(--white);color:var(--accent);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.body-wrap{display:flex;flex:1;overflow:hidden}
+
+/* SIDEBAR */
+.sidebar{width:var(--sb-full);background:var(--white);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;overflow:hidden;transition:width .25s ease}
+.sidebar.collapsed{width:var(--sb-mini)}
+.sb-toggle{display:flex;align-items:center;justify-content:flex-end;padding:10px 12px 6px}
+.sb-toggle-btn{width:28px;height:28px;border-radius:6px;border:1px solid var(--border);background:var(--bg);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--ink3);transition:all .18s}
+.sb-toggle-btn:hover{background:var(--bg2);color:var(--ink)}
+.sb-label{font-size:10px;font-weight:600;color:var(--ink3);letter-spacing:.1em;padding:10px 16px 4px;text-transform:uppercase;white-space:nowrap;overflow:hidden;transition:opacity .2s}
+.sidebar.collapsed .sb-label{opacity:0;pointer-events:none}
+.sb-item{display:flex;align-items:center;gap:10px;padding:8px 14px;cursor:pointer;color:var(--ink2);font-size:13px;border-left:3px solid transparent;transition:all .15s;white-space:nowrap;overflow:hidden}
+.sb-item:hover{background:var(--bg);color:var(--ink)}
+.sb-item.active{background:var(--alight);color:var(--accent);border-left-color:var(--accent);font-weight:600}
+.sb-icon{font-size:16px;width:22px;text-align:center;flex-shrink:0}
+.sb-text{overflow:hidden;transition:opacity .2s,max-width .25s;max-width:160px}
+.sidebar.collapsed .sb-text{opacity:0;max-width:0}
+.sidebar.collapsed .sb-item{justify-content:center;padding:9px 0;border-left:none}
+.sidebar.collapsed .sb-item{position:relative}
+.sidebar.collapsed .sb-item:hover::after{content:attr(data-label);position:absolute;left:calc(var(--sb-mini) + 4px);top:50%;transform:translateY(-50%);background:var(--ink);color:#fff;font-size:12px;padding:4px 10px;border-radius:6px;white-space:nowrap;z-index:300;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.sb-div{height:1px;background:var(--border);margin:5px 8px}
+
+/* IMPORT BAR */
+.import-bar{background:#fffbf5;border-bottom:1px solid #f0e8d8;padding:7px 20px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;flex-shrink:0}
+.import-title{font-size:11px;font-weight:600;color:var(--accent2);white-space:nowrap}
+.import-btns{display:flex;gap:5px;flex-wrap:wrap}
+.ibtn{display:flex;align-items:center;gap:4px;background:#fff;border:1px solid var(--border2);border-radius:6px;padding:3px 9px;font-size:11px;font-weight:500;cursor:pointer;color:var(--ink2);transition:all .18s;white-space:nowrap}
+.ibtn:hover{border-color:var(--accent);color:var(--accent);background:var(--alight)}
+.ibtn .dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.ibtn .st{font-size:10px;color:var(--ink3);margin-left:2px}
+.ibtn .st.ok{color:var(--accent)}
+input[type=file]{display:none}
+.import-hint{font-size:10px;color:var(--ink3);margin-left:auto}
+
+/* MAIN */
+.main{flex:1;overflow-y:auto;padding:22px 26px 60px}
+.page{display:none}
+.page.active{display:block;animation:fadeUp .3s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.page-head{margin-bottom:20px;padding-bottom:14px;border-bottom:2px solid var(--border)}
+.page-head h1{font-family:'Playfair Display',serif;font-size:26px;font-weight:600;line-height:1.2}
+.page-head p{font-size:11px;color:var(--ink3);margin-top:3px;letter-spacing:.07em}
+.section{margin-bottom:24px}
+.sec-hd{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;color:var(--accent);background:var(--alight);border:1px solid #b8d8cc;padding:2px 7px;border-radius:4px;letter-spacing:.1em}
+.sec-title{font-family:'Noto Serif TC',serif;font-size:14px;font-weight:600}
+.sec-desc{font-size:11px;color:var(--ink3);margin-top:1px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px;box-shadow:var(--sh)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px}
+.g4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:9px}
+.g5{display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr;gap:9px}
+.gauto{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.stat-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--rsm);padding:10px 13px}
+.stat-label{font-size:10px;color:var(--ink3);font-weight:500;margin-bottom:3px}
+.stat-val{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:500}
+.stat-yoy{display:inline-flex;align-items:center;gap:2px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;padding:2px 6px;border-radius:4px;margin-top:4px}
+.yoy-up{background:var(--upbg);color:var(--up)}.yoy-dn{background:var(--dnbg);color:var(--dn)}.yoy-na{background:var(--bg2);color:var(--ink3)}
+.vg{color:var(--accent)}.va{color:var(--accent2)}.vr{color:var(--accent3)}.vx{color:var(--ink3)}
+.row-title{font-size:11px;font-weight:600;color:var(--ink3);letter-spacing:.05em;margin-bottom:6px;margin-top:12px;text-transform:uppercase}
+.row-title:first-child{margin-top:0}
+.chart-wrap{position:relative;height:240px}
+.chart-wrap-md{position:relative;height:200px}
+.chart-wrap-lg{position:relative;height:280px}
+.chart-wrap-sm{position:relative;height:160px}
+.util-layout{display:grid;grid-template-columns:1fr 250px;gap:13px}
+.person-list{display:flex;flex-direction:column;gap:5px}
+.person-row{display:flex;align-items:center;gap:7px;padding:6px 9px;background:var(--bg);border:1px solid var(--border);border-radius:var(--rsm)}
+.p-av{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;flex-shrink:0}
+.p-nm{font-size:12px;font-weight:500;flex:1}
+.p-bar-w{width:56px}.p-bar-bg{height:3px;background:var(--bg2);border-radius:2px;overflow:hidden}
+.p-bar-fill{height:100%;border-radius:2px;transition:width .8s ease}
+.p-pct{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;min-width:42px;text-align:right}
+.top3-list{display:flex;flex-direction:column;gap:4px}
+.top3-row{display:flex;align-items:center;gap:8px;padding:6px 10px;background:var(--bg);border:1px solid var(--border);border-radius:var(--rsm)}
+.top3-medal{font-size:15px;width:20px;text-align:center}
+.top3-name{flex:1;font-size:12px;font-weight:500}
+.top3-val{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500}
+
+/* RANKING */
+.ranking-list{display:flex;flex-direction:column;gap:5px}
+.rank-row{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--bg);border:1px solid var(--border);border-radius:var(--rsm);transition:all .18s}
+.rank-row:hover{background:var(--white);border-color:var(--border2);box-shadow:var(--sh);transform:translateX(3px)}
+.rank-no{font-family:'Playfair Display',serif;font-size:16px;min-width:26px;text-align:center}
+.r1{color:#b8860b}.r2{color:#808080}.r3{color:#a05030}
+.rn{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink3)}
+.rank-info{flex:1;min-width:0}
+.rank-name{font-size:13px;font-weight:500}
+.rank-sub{font-size:11px;color:var(--ink3);margin-top:1px}
+.rank-metrics{display:flex;flex-direction:column;align-items:flex-end;gap:2px;min-width:110px}
+.rank-amt{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500}
+.rank-amt-sub{font-size:10px;color:var(--ink3)}
+.rank-avg-row{font-size:10px;color:var(--ink3);display:flex;align-items:center;gap:3px;justify-content:flex-end}
+.rank-yoy{display:inline-flex;align-items:center;gap:2px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;padding:2px 5px;border-radius:4px}
+.type-chip{font-size:10px;font-weight:500;background:#e3f0ff;color:var(--blue);padding:1px 5px;border-radius:3px;margin-left:5px;vertical-align:middle}
+
+/* 重要工作項目 */
+.work-content{white-space:pre-wrap;line-height:1.8;font-size:13px;color:var(--ink2);padding:6px 0}
+.work-month-badge{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);background:var(--alight);border:1px solid #b8d8cc;padding:3px 10px;border-radius:5px;display:inline-block;margin-bottom:12px}
+.no-work{color:var(--ink3);font-size:13px;padding:20px 0;text-align:center}
+
+/* 結案率 */
+.case-rate-grid{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.case-rate-card{flex:1;min-width:65px;background:var(--bg);border:1px solid var(--border);border-radius:var(--rsm);padding:8px 10px;text-align:center}
+.crm-label{font-size:10px;color:var(--ink3);margin-bottom:3px}
+.crm-val{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600}
+.crm-hit{color:var(--accent)}.crm-miss{color:var(--accent3)}.crm-na{color:var(--ink4)}
+
+/* 全服務模式產品 */
+.product-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:14px}
+.product-table th{background:var(--bg2);color:var(--ink2);font-weight:600;padding:7px 10px;text-align:center;border:1px solid var(--border);font-size:11px}
+.product-table td{padding:6px 10px;text-align:center;border:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:12px}
+.product-table tr:nth-child(even) td{background:#fafaf8}
+.product-table .cat-label{text-align:left;font-family:'Noto Sans TC';font-weight:500;color:var(--ink2)}
+.product-table .y25{color:var(--ink3)}.product-table .y26{color:var(--accent);font-weight:600}
+
+/* Release 指標 */
+.release-wrap{display:flex;flex-direction:column;gap:20px}
+.release-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px;box-shadow:var(--sh)}
+.release-title-row{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.release-sys-name{font-family:'Noto Serif TC',serif;font-size:15px;font-weight:600}
+.rb{font-size:10px;font-weight:500;padding:2px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace}
+.rb-ft{background:#e8f2ed;color:var(--accent)}
+.rb-fk{background:#fff3e0;color:var(--accent2)}
+.rb-tl{background:#e3f0ff;color:var(--blue)}
+.release-layout{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.release-chart-title{font-size:11px;font-weight:600;color:var(--ink2);margin-bottom:8px}
+.release-kpis{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.rkpi{background:var(--bg);border:1px solid var(--border);border-radius:var(--rsm);padding:8px 12px;min-width:90px;text-align:center}
+.rkpi-label{font-size:10px;color:var(--ink3);margin-bottom:2px}
+.rkpi-val{font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:500}
+/* Release 長條圖表格 */
+.release-detail-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:12px}
+.release-detail-table th{background:var(--accent);color:white;padding:7px 10px;text-align:left;font-weight:600;font-size:11px;border:1px solid var(--accent)}
+.release-detail-table td{padding:6px 10px;border:1px solid var(--border);font-size:12px}
+.release-detail-table tr:nth-child(even) td{background:#fafaf8}
+.release-detail-table .num-col{text-align:center;font-family:'JetBrains Mono',monospace;font-weight:600}
+
+/* 個人工作表現 */
+.personal-select-bar{display:flex;align-items:center;gap:10px;margin-bottom:18px;flex-wrap:wrap}
+.personal-select-label{font-size:12px;color:var(--ink2);font-weight:500}
+.personal-tabs{display:flex;gap:6px;flex-wrap:wrap}
+.ptab{padding:5px 14px;border:1px solid var(--border2);border-radius:6px;font-size:12px;cursor:pointer;background:var(--bg);color:var(--ink2);transition:all .18s}
+.ptab.active{background:var(--accent);color:white;border-color:var(--accent)}
+.personal-section-title{font-family:'Noto Serif TC',serif;font-size:13px;font-weight:600;color:var(--ink2);margin-bottom:8px;padding-left:2px;border-left:3px solid var(--accent);padding-left:8px}
+.consult-table{width:100%;border-collapse:collapse;font-size:12px}
+.consult-table th{background:var(--bg2);padding:6px 10px;text-align:center;font-weight:600;font-size:11px;border:1px solid var(--border)}
+.consult-table td{padding:5px 9px;text-align:center;border:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:11px}
+.consult-hit{color:var(--accent);font-weight:700;font-family:'Noto Sans TC'}
+.consult-miss{color:var(--accent3);font-family:'JetBrains Mono'}
+
+/* ability */
+.ability-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--rsm);padding:12px;transition:all .2s}
+.ab-hd{display:flex;align-items:center;gap:8px;margin-bottom:9px}
+.ab-av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0}
+.ab-nm{font-size:12px;font-weight:600}
+.ab-bar-bg{height:5px;background:var(--bg2);border-radius:3px;overflow:hidden;margin-bottom:6px}
+.ab-bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--accent),#4a9a7a);transition:width 1s ease}
+.ab-stats{display:flex;justify-content:space-between}
+.ab-label{font-size:10px;color:var(--ink3);margin-bottom:1px}
+.ab-val{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500}
+.ab-monthly{display:flex;gap:2px;margin-top:7px;flex-wrap:wrap}
+.ab-dot{width:17px;height:17px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:8px;font-family:'JetBrains Mono',monospace}
+.ab-done{background:#d4ede3;color:var(--accent)}.ab-zero{background:var(--bg2);color:var(--ink4)}.ab-future{background:var(--bg);color:var(--ink4);border:1px dashed var(--border)}
+
+.upload-chips{display:flex;gap:7px;margin-top:10px;flex-wrap:wrap}
+.upload-chip{flex:1;min-width:80px;background:var(--bg);border:1px solid var(--border);border-radius:var(--rsm);padding:8px 11px;text-align:center}
+.chip-name{font-size:11px;color:var(--ink3);margin-bottom:3px}
+.chip-val{font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:500}
+.chip-sub{font-size:10px;color:var(--ink4);margin-top:1px}
+
+.no-data{text-align:center;padding:28px;color:var(--ink3);font-size:13px}
+/* Release 筆記 */
+.rel-note-view{font-size:13px;line-height:1.8;color:var(--ink2);min-height:80px}
+.rel-note-view h2{font-size:15px;font-weight:700;margin:6px 0 3px}
+.rel-note-view h3{font-size:13px;font-weight:600;margin:4px 0 2px}
+.rel-note-view ul,.rel-note-view ol{padding-left:18px;margin:3px 0}
+#wl-editor:empty::before{content:attr(data-placeholder);color:var(--ink4);font-size:13px;pointer-events:none}
+#wl-editor h2{font-size:16px;font-weight:700;margin:8px 0 4px;color:var(--ink)}
+#wl-editor h3{font-size:14px;font-weight:600;margin:6px 0 3px;color:var(--ink2)}
+#wl-editor h4{font-size:13px;font-weight:600;margin:4px 0 2px;color:var(--ink2)}
+#wl-editor ul,#wl-editor ol{padding-left:20px;margin:4px 0}
+#wl-editor li{margin:2px 0}
+.error-box{background:#fff5f5;border:1px solid #fcc;border-radius:var(--rsm);padding:10px 14px;font-size:12px;color:var(--accent3);margin-bottom:12px;display:none}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+</style>
+</head>
+<body>
+<header class="header">
+  <div class="hl">
+    <div class="logo">績</div>
+    <div class="site-name">系統服務發展部(導入&amp;客服)工作總覽</div>
+    <span class="site-tag">2026</span>
+  </div>
+  <div class="hr">
+    <div class="ctrl-g">
+      <span class="ctrl-label">月份</span>
+      <select class="ctrl" id="monthSelect" onchange="onMonthChange()">
+        <option value="1">01月</option><option value="2">02月</option><option value="3">03月</option><option value="4">04月</option>
+        <option value="5">05月</option><option value="6">06月</option><option value="7">07月</option><option value="8">08月</option>
+        <option value="9">09月</option><option value="10">10月</option><option value="11">11月</option><option value="12">12月</option>
+      </select>
+    </div>
+    <div class="hdivider"></div>
+    <div class="view-toggle">
+      <button class="vbtn active" onclick="switchView('manager')">主管版</button>
+      <button class="vbtn" onclick="switchView('member')">同仁版</button>
+    </div>
+  </div>
+</header>
+
+<div class="body-wrap">
+<nav class="sidebar" id="sidebar">
+  <div class="sb-toggle"><button class="sb-toggle-btn" onclick="toggleSidebar()">◀</button></div>
+  <div class="sb-label">主管版</div>
+  <div class="sb-item active" onclick="navTo('overview')" id="nav-overview" data-label="部門總覽"><span class="sb-icon">📊</span><span class="sb-text">部門總覽</span></div>
+  <div class="sb-item" onclick="navTo('worklog')" id="nav-worklog" data-label="重要工作項目與成果"><span class="sb-icon">📋</span><span class="sb-text">重要工作項目與成果</span></div>
+  <div class="sb-item" onclick="navTo('utilization')" id="nav-utilization" data-label="人力利用率"><span class="sb-icon">👥</span><span class="sb-text">人力利用率</span></div>
+  <div class="sb-item" onclick="navTo('channel')" id="nav-channel" data-label="服務場域供應商"><span class="sb-icon">🏪</span><span class="sb-text">服務場域供應商</span></div>
+  <div class="sb-item" onclick="navTo('fullservice')" id="nav-fullservice" data-label="全服務模式產品"><span class="sb-icon">📦</span><span class="sb-text">全服務模式產品</span></div>
+  <div class="sb-item" onclick="navTo('ranking')" id="nav-ranking" data-label="供應商/場域排名"><span class="sb-icon">🏆</span><span class="sb-text">供應商/場域排名</span></div>
+  <div class="sb-item" onclick="navTo('release')" id="nav-release" data-label="系統驗測監控"><span class="sb-icon">🔬</span><span class="sb-text">系統驗測監控</span></div>
+  <div class="sb-div"></div>
+  <div class="sb-label">個人</div>
+  <div class="sb-item" onclick="navTo('personal')" id="nav-personal" data-label="個人工作表現"><span class="sb-icon">🌱</span><span class="sb-text">個人工作表現</span></div>
+</nav>
+
+<div class="main">
+  <!-- Import Bar 可折疊 -->
+  <div id="importBar" style="background:#fffbf5;border-bottom:1px solid #f0e8d8;flex-shrink:0">
+    <!-- 標題列（常駐顯示） -->
+    <div style="display:flex;align-items:center;gap:10px;padding:6px 20px;cursor:pointer" onclick="toggleImport()">
+      <span style="font-size:11px;font-weight:600;color:var(--accent2)">📂 匯入資料</span>
+      <div id="importStatus" style="display:flex;gap:5px;flex-wrap:wrap;flex:1"></div>
+      <button id="importToggleBtn" style="border:1px solid var(--border2);background:var(--bg);border-radius:6px;padding:2px 10px;font-size:11px;color:var(--ink3);cursor:pointer;white-space:nowrap">展開 ▼</button>
+    </div>
+    <!-- 按鈕區（可折疊） -->
+    <div id="importBtns" style="display:none;padding:0 20px 8px;flex-wrap:wrap;gap:5px">
+      <div style="display:flex;gap:5px;flex-wrap:wrap">
+        <div class="ibtn" onclick="trigImp('util')"><span class="dot" style="background:#2a6049"></span>人力利用率<span class="st" id="st-util">未匯入</span></div>
+        <div class="ibtn" onclick="trigImp('monthly')"><span class="dot" style="background:#3a6ac8"></span>每月業績<span class="st" id="st-monthly">未匯入</span></div>
+        <div class="ibtn" onclick="trigImp('channel')"><span class="dot" style="background:#c8873a"></span>年度服務場域供應商<span class="st" id="st-channel">未匯入</span></div>
+        <div class="ibtn" onclick="trigImp('supplier')"><span class="dot" style="background:#c94f3a"></span>供應商排名<span class="st" id="st-supplier">未匯入</span></div>
+        <div class="ibtn" onclick="trigImp('venue')"><span class="dot" style="background:#7c4dbc"></span>場域排名<span class="st" id="st-venue">未匯入</span></div>
+        <div class="ibtn" onclick="trigImp('yeargrowth')"><span class="dot" style="background:#1a8a6a"></span>每月上架數(年度比)<span class="st" id="st-yeargrowth">未匯入</span></div>
+  
+        <div class="ibtn" onclick="trigImp('fontour')"><span class="dot" style="background:#2a6049"></span>Release年度累積數<span class="st" id="st-fontour">未匯入</span></div>
+        <div class="ibtn" onclick="trigImp('fonticket')"><span class="dot" style="background:#c8873a"></span>Release(FonTicket)<span class="st" id="st-fonticket">未匯入</span></div>
+        <div class="ibtn" onclick="trigImp('traveline')"><span class="dot" style="background:#3a6ac8"></span>Release(Traveline)<span class="st" id="st-traveline">未匯入</span></div>
+      </div>
+      <div style="font-size:10px;color:var(--ink3);margin-top:4px">各分頁下載 CSV 後點按鈕上傳</div>
+    </div>
+    <input type="file" id="fileInput" accept=".csv" onchange="handleFile(event)">
+  </div>
+  <div class="error-box" id="errorBox"></div>
+
+  <!-- 部門總覽 -->
+  <div class="page active" id="page-overview">
+    <div class="page-head"><h1>部門績效總覽</h1><p>SYSTEM SERVICE DEVELOPMENT DEPT. · 2026 ANNUAL PERFORMANCE REPORT</p></div>
+    <div class="section">
+      <div class="sec-hd"><span class="sec-num">01</span><div><div class="sec-title">服務場域 &amp; 供應商摘要</div><div class="sec-desc" id="chDesc">來源：年度服務場域.供應商</div></div></div>
+      <div class="card" id="channelSummaryCard"><div class="no-data">請匯入「年度服務場域供應商」CSV</div></div>
+    </div>
+    <div class="section">
+      <div class="sec-hd"><span class="sec-num">02</span><div><div class="sec-title">人力利用率摘要</div><div class="sec-desc">導入課 &amp; 客服課當月利用率 + 前三名 + 結案率</div></div></div>
+      <div class="g3">
+        <div class="card">
+          <div class="row-title" style="margin-bottom:8px">📊 課別利用率</div>
+          <div id="utilKpiCards"></div>
+        </div>
+        <div class="card">
+          <div class="g2">
+            <div><div class="row-title">導入課 TOP3</div><div class="top3-list" id="importTop3"></div></div>
+            <div><div class="row-title">客服課 TOP3</div><div class="top3-list" id="serviceTop3"></div></div>
+          </div>
+        </div>
+        <div class="card">
+          <div style="font-size:13px;font-weight:600;font-family:'Noto Serif TC',serif;margin-bottom:10px">全服務模式產品上架數 2025 vs 2026</div>
+          <div class="chart-wrap"><canvas id="growthChart"></canvas></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 重要工作項目與成果 -->
+  <!-- ═══ Modal 編輯器 ═══ -->
+  <div id="wl-modal" style="display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.45);backdrop-filter:blur(3px);align-items:center;justify-content:center">
+    <div style="background:var(--white);border-radius:14px;box-shadow:0 20px 60px rgba(0,0,0,.3);width:min(760px,92vw);max-height:90vh;display:flex;flex-direction:column;overflow:hidden">
+      <!-- Modal 標題列 -->
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:var(--alight);border-bottom:1px solid #b8d8cc;flex-shrink:0">
+        <span style="font-size:14px;font-weight:600;font-family:'Noto Serif TC',serif;color:var(--accent)">✏️ 新增 / 編輯工作成果</span>
+        <button onclick="wlCloseModal()" style="width:30px;height:30px;border:none;background:transparent;cursor:pointer;font-size:18px;color:var(--ink3);line-height:1;border-radius:6px" title="關閉">✕</button>
+      </div>
+      <!-- Modal 內容 -->
+      <div style="padding:18px;overflow-y:auto;flex:1">
+        <div style="display:flex;gap:10px;margin-bottom:12px">
+          <div style="flex:2">
+            <label style="font-size:11px;font-weight:600;color:var(--ink3);display:block;margin-bottom:4px">標題</label>
+            <input id="wl-title" type="text" placeholder="輸入本月工作標題..." style="width:100%;border:1px solid var(--border2);border-radius:6px;padding:7px 10px;font-size:13px;font-family:'Noto Sans TC',sans-serif;color:var(--ink);outline:none;background:var(--bg)">
+          </div>
+          <div style="flex:1">
+            <label style="font-size:11px;font-weight:600;color:var(--ink3);display:block;margin-bottom:4px">年份</label>
+            <select id="wl-year" style="width:100%;border:1px solid var(--border2);border-radius:6px;padding:7px 10px;font-size:13px;font-family:'Noto Sans TC',sans-serif;color:var(--ink);outline:none;background:var(--bg);cursor:pointer">
+              <option value="2026">2026</option><option value="2025">2025</option>
+            </select>
+          </div>
+          <div style="flex:1">
+            <label style="font-size:11px;font-weight:600;color:var(--ink3);display:block;margin-bottom:4px">月份</label>
+            <select id="wl-month" style="width:100%;border:1px solid var(--border2);border-radius:6px;padding:7px 10px;font-size:13px;font-family:'Noto Sans TC',sans-serif;color:var(--ink);outline:none;background:var(--bg);cursor:pointer">
+              <option value="1">01月</option><option value="2">02月</option><option value="3">03月</option>
+              <option value="4">04月</option><option value="5">05月</option><option value="6">06月</option>
+              <option value="7">07月</option><option value="8">08月</option><option value="9">09月</option>
+              <option value="10">10月</option><option value="11">11月</option><option value="12">12月</option>
+            </select>
+          </div>
+        </div>
+        <label style="font-size:11px;font-weight:600;color:var(--ink3);display:block;margin-bottom:4px">內容 *</label>
+        <div style="display:flex;gap:2px;padding:6px 8px;background:var(--bg2);border:1px solid var(--border2);border-radius:6px 6px 0 0;flex-wrap:wrap">
+          <button onclick="wlCmd('bold')" title="粗體" style="width:28px;height:28px;border:1px solid var(--border);border-radius:4px;background:var(--white);cursor:pointer;font-weight:700;font-size:13px">B</button>
+          <button onclick="wlCmd('italic')" title="斜體" style="width:28px;height:28px;border:1px solid var(--border);border-radius:4px;background:var(--white);cursor:pointer;font-style:italic;font-size:13px">I</button>
+          <button onclick="wlCmd('underline')" title="底線" style="width:28px;height:28px;border:1px solid var(--border);border-radius:4px;background:var(--white);cursor:pointer;text-decoration:underline;font-size:13px">U</button>
+          <button onclick="wlCmd('strikeThrough')" title="刪除線" style="width:28px;height:28px;border:1px solid var(--border);border-radius:4px;background:var(--white);cursor:pointer;text-decoration:line-through;font-size:13px">S</button>
+          <div style="width:1px;background:var(--border);margin:2px 4px"></div>
+          <button onclick="wlCmd('formatBlock','h2')" style="padding:0 8px;height:28px;border:1px solid var(--border);border-radius:4px;background:var(--white);cursor:pointer;font-size:11px;font-weight:600">H1</button>
+          <button onclick="wlCmd('formatBlock','h3')" style="padding:0 8px;height:28px;border:1px solid var(--border);border-radius:4px;background:var(--white);cursor:pointer;font-size:11px;font-weight:600">H2</button>
+          <button onclick="wlCmd('formatBlock','h4')" style="padding:0 8px;height:28px;border:1px solid var(--border);border-radius:4px;background:var(--white);cursor:pointer;font-size:11px;font-weight:600">H3</button>
+          <div style="width:1px;background:var(--border);margin:2px 4px"></div>
+          <button onclick="wlCmd('insertUnorderedList')" title="項目符號" style="width:28px;height:28px;border:1px solid var(--border);border-radius:4px;background:var(--white);cursor:pointer;font-size:14px">≡</button>
+          <button onclick="wlCmd('insertOrderedList')" title="編號清單" style="width:28px;height:28px;border:1px solid var(--border);border-radius:4px;background:var(--white);cursor:pointer;font-size:14px">≔</button>
+          <div style="width:1px;background:var(--border);margin:2px 4px"></div>
+          <button onclick="wlCmd('justifyLeft')" title="靠左" style="width:28px;height:28px;border:1px solid var(--border);border-radius:4px;background:var(--white);cursor:pointer;font-size:13px">⬅</button>
+          <button onclick="wlCmd('justifyCenter')" title="置中" style="width:28px;height:28px;border:1px solid var(--border);border-radius:4px;background:var(--white);cursor:pointer;font-size:13px">⬌</button>
+          <div style="width:1px;background:var(--border);margin:2px 4px"></div>
+          <button onclick="wlUndo()" title="復原" style="width:28px;height:28px;border:1px solid var(--border);border-radius:4px;background:var(--white);cursor:pointer;font-size:13px">↩</button>
+          <button onclick="wlRedo()" title="取消復原" style="width:28px;height:28px;border:1px solid var(--border);border-radius:4px;background:var(--white);cursor:pointer;font-size:13px">↪</button>
+        </div>
+        <div id="wl-editor" contenteditable="true"
+          style="min-height:260px;max-height:420px;border:1px solid var(--border2);border-top:none;border-radius:0 0 6px 6px;padding:12px 14px;font-size:13px;font-family:'Noto Sans TC',sans-serif;line-height:1.8;color:var(--ink);outline:none;background:var(--white);overflow-y:auto;resize:vertical"
+          data-placeholder="輸入訊息內容..."></div>
+        <div style="font-size:10px;color:var(--ink3);margin-top:4px">內容不可空白</div>
+      </div>
+      <!-- Modal 底部按鈕 -->
+      <div style="display:flex;align-items:center;gap:10px;padding:14px 20px;border-top:1px solid var(--border);flex-shrink:0;background:var(--bg)">
+        <button onclick="wlSave()" style="flex:1;padding:9px;background:var(--accent);color:white;border:none;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Noto Sans TC',sans-serif">💾 儲存</button>
+        <button onclick="wlClear()" style="padding:9px 16px;background:var(--bg2);color:var(--ink3);border:1px solid var(--border);border-radius:7px;font-size:13px;cursor:pointer;font-family:'Noto Sans TC',sans-serif">清除</button>
+        <div id="wl-save-msg" style="font-size:11px;color:var(--accent);display:none">✅ 已儲存！</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ 工作項目主頁面 ═══ -->
+  <div class="page" id="page-worklog">
+    <div class="page-head" style="display:flex;align-items:flex-end;justify-content:space-between">
+      <div><h1>重要工作項目與成果</h1><p>每月重要工作摘要記錄</p></div>
+      <!-- 右上角筆icon新增按鈕 -->
+      <button onclick="wlOpenModal()" title="新增工作成果"
+        style="display:flex;align-items:center;gap:6px;padding:8px 16px;background:var(--accent);color:white;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Noto Sans TC',sans-serif;margin-bottom:4px;box-shadow:var(--sh)">
+        ✏️ 新增
+      </button>
+    </div>
+
+    <!-- 左右佈局：左側月份列表 + 右側主顯示 -->
+    <div style="display:flex;gap:14px;min-height:500px">
+
+      <!-- 左側：月份超連結列表 -->
+      <div style="width:130px;flex-shrink:0">
+        <div style="display:flex;align-items:center;gap:6px;padding:6px 8px 10px;border-bottom:2px solid var(--accent);margin-bottom:8px">
+          <span style="font-size:14px">📋</span>
+          <span style="font-size:12px;font-weight:600;font-family:'Noto Serif TC',serif;color:var(--accent)">工作成果</span>
+        </div>
+        <div id="wl-record-list" style="display:flex;flex-direction:column;gap:4px"></div>
+      </div>
+
+      <!-- 右側：主顯示區 -->
+      <div style="flex:1;min-width:0">
+        <div class="card" style="padding:0;overflow:hidden">
+          <div id="worklogContent" style="padding:20px;min-height:300px"><div class="no-data">尚無資料，請點右上角「✏️ 新增」按鈕新增</div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 人力利用率 -->
+  <div class="page" id="page-utilization">
+    <div class="page-head"><h1>人力利用率</h1><p>目標基準：85%｜導入課 &amp; 客服課</p></div>
+    <div class="section">
+      <div class="g3" id="utilKpiCards2" style="margin-bottom:12px"></div>
+      <div class="card"><div class="util-layout"><div class="chart-wrap"><canvas id="utilChart"></canvas></div><div class="person-list" id="personList"></div></div></div>
+    </div>
+    <div class="section">
+      <div class="g2">
+        <div class="card"><div class="row-title">🏢 導入課 TOP3</div><div class="top3-list" id="importTop3b"></div></div>
+        <div class="card"><div class="row-title">🎧 客服課 TOP3</div><div class="top3-list" id="serviceTop3b"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 服務場域供應商 -->
+  <div class="page" id="page-channel">
+    <div class="page-head"><h1>服務場域 &amp; 供應商</h1><p>來源：年度服務場域.供應商</p></div>
+    <div class="section">
+      <div class="sec-hd"><span class="sec-num">01</span><div><div class="sec-title">當月數據</div><div class="sec-desc" id="chPageDesc"></div></div></div>
+      <div class="card" id="channelDetailCard"><div class="no-data">請匯入CSV</div></div>
+    </div>
+    <div class="section">
+      <div class="sec-hd"><span class="sec-num">02</span><div><div class="sec-title">服務數月趨勢（含2025同期）</div></div></div>
+      <div class="card"><div class="chart-wrap-lg"><canvas id="chServiceChart"></canvas></div></div>
+    </div>
+    <div class="section">
+      <div class="sec-hd"><span class="sec-num">03</span><div><div class="sec-title">銷售金額趨勢</div></div></div>
+      <div class="card"><div class="chart-wrap-lg"><canvas id="chSalesChart"></canvas></div></div>
+    </div>
+  </div>
+
+  <!-- 全服務模式產品 -->
+  <div class="page" id="page-fullservice">
+    <div class="page-head"><h1>全服務模式產品</h1><p>來源：每月產品上架數(年度比) F~H欄</p></div>
+    <div class="section">
+      <div class="card">
+        <div style="font-size:13px;font-weight:600;font-family:'Noto Serif TC',serif;margin-bottom:12px">旅遊商品 累積上架數 2025 vs 2026</div>
+        <div class="chart-wrap-md"><canvas id="travelChart"></canvas></div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="card">
+        <div style="font-size:13px;font-weight:600;font-family:'Noto Serif TC',serif;margin-bottom:12px">系統產品 累積上架數 2025 vs 2026</div>
+        <div class="chart-wrap-md"><canvas id="systemChart"></canvas></div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="card">
+        <div style="font-size:13px;font-weight:600;font-family:'Noto Serif TC',serif;margin-bottom:12px">專案服務產品 累積上架數 2025 vs 2026</div>
+        <div class="chart-wrap-md"><canvas id="specialChart"></canvas></div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="card">
+        <div style="font-size:13px;font-weight:600;font-family:'Noto Serif TC',serif;margin-bottom:12px">📊 各項數據對照表</div>
+        <div id="productTableWrap"><div class="no-data">請匯入「每月上架數(年度比)」CSV</div></div>
+        <div class="upload-chips" id="uploadChips"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 供應商/場域排名 -->
+  <div class="page" id="page-ranking">
+    <div class="page-head"><h1>供應商 / 場域排名</h1><p>前10名｜含 YOY 成長率</p></div>
+    <div class="g2">
+      <div class="section">
+        <div class="sec-hd"><span class="sec-num">03</span><div><div class="sec-title">旅遊商品前10大供應商</div><div class="sec-desc" id="sec3Desc">依核銷金額</div></div></div>
+        <div class="card"><div class="ranking-list" id="supplierList"></div></div>
+      </div>
+      <div class="section">
+        <div class="sec-hd"><span class="sec-num">04</span><div><div class="sec-title">系統產品前10大場域</div><div class="sec-desc" id="sec4Desc">依營收金額</div></div></div>
+        <div class="card"><div class="ranking-list" id="venueList"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 系統驗測監控 -->
+  <!-- Release 筆記 Modal -->
+  <div id="rel-modal" style="display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.45);backdrop-filter:blur(3px);align-items:center;justify-content:center">
+    <div style="background:var(--white);border-radius:14px;box-shadow:0 20px 60px rgba(0,0,0,.3);width:min(700px,90vw);max-height:88vh;display:flex;flex-direction:column;overflow:hidden">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:var(--alight);border-bottom:1px solid #b8d8cc;flex-shrink:0">
+        <span id="rel-modal-title" style="font-size:14px;font-weight:600;font-family:'Noto Serif TC',serif;color:var(--accent)">✏️ 編輯備註</span>
+        <button onclick="relCloseModal()" style="width:30px;height:30px;border:none;background:transparent;cursor:pointer;font-size:18px;color:var(--ink3)">✕</button>
+      </div>
+      <div style="padding:18px;overflow-y:auto;flex:1">
+        <!-- 工具列 -->
+        <div style="display:flex;gap:2px;padding:6px 8px;background:var(--bg2);border:1px solid var(--border2);border-radius:6px 6px 0 0;flex-wrap:wrap;margin-bottom:0">
+          <button onclick="relCmd('bold')" style="width:28px;height:28px;border:1px solid var(--border);border-radius:4px;background:var(--white);cursor:pointer;font-weight:700;font-size:13px">B</button>
+          <button onclick="relCmd('italic')" style="width:28px;height:28px;border:1px solid var(--border);border-radius:4px;background:var(--white);cursor:pointer;font-style:italic;font-size:13px">I</button>
+          <button onclick="relCmd('underline')" style="width:28px;height:28px;border:1px solid var(--border);border-radius:4px;background:var(--white);cursor:pointer;text-decoration:underline;font-size:13px">U</button>
+          <div style="width:1px;background:var(--border);margin:2px 4px"></div>
+          <button onclick="relCmd('formatBlock','h2')" style="padding:0 8px;height:28px;border:1px solid var(--border);border-radius:4px;background:var(--white);cursor:pointer;font-size:11px;font-weight:600">H1</button>
+          <button onclick="relCmd('formatBlock','h3')" style="padding:0 8px;height:28px;border:1px solid var(--border);border-radius:4px;background:var(--white);cursor:pointer;font-size:11px;font-weight:600">H2</button>
+          <div style="width:1px;background:var(--border);margin:2px 4px"></div>
+          <button onclick="relCmd('insertUnorderedList')" style="width:28px;height:28px;border:1px solid var(--border);border-radius:4px;background:var(--white);cursor:pointer;font-size:14px">≡</button>
+          <button onclick="relCmd('insertOrderedList')" style="width:28px;height:28px;border:1px solid var(--border);border-radius:4px;background:var(--white);cursor:pointer;font-size:14px">≔</button>
+          <div style="width:1px;background:var(--border);margin:2px 4px"></div>
+          <button onclick="document.execCommand('undo')" style="width:28px;height:28px;border:1px solid var(--border);border-radius:4px;background:var(--white);cursor:pointer;font-size:13px">↩</button>
+          <button onclick="document.execCommand('redo')" style="width:28px;height:28px;border:1px solid var(--border);border-radius:4px;background:var(--white);cursor:pointer;font-size:13px">↪</button>
+        </div>
+        <div id="rel-editor" contenteditable="true"
+          style="min-height:240px;max-height:420px;border:1px solid var(--border2);border-top:none;border-radius:0 0 6px 6px;padding:12px 14px;font-size:13px;font-family:'Noto Sans TC',sans-serif;line-height:1.8;color:var(--ink);outline:none;background:var(--white);overflow-y:auto;resize:vertical"
+          data-placeholder="輸入備註內容..."></div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;padding:14px 20px;border-top:1px solid var(--border);background:var(--bg);flex-shrink:0">
+        <button onclick="relSave()" style="flex:1;padding:9px;background:var(--accent);color:white;border:none;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Noto Sans TC',sans-serif">💾 儲存</button>
+        <button onclick="relCloseModal()" style="padding:9px 16px;background:var(--bg2);color:var(--ink3);border:1px solid var(--border);border-radius:7px;font-size:13px;cursor:pointer;font-family:'Noto Sans TC',sans-serif">取消</button>
+        <div id="rel-save-msg" style="font-size:11px;color:var(--accent);display:none">✅ 已儲存！</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page" id="page-release">
+    <div class="page-head"><h1>系統驗測監控</h1><p>Release 指標｜來源：Release年度累積數 CSV</p></div>
+    <div class="release-wrap">
+      <!-- FonTour -->
+      <div class="release-card">
+        <div class="release-title-row"><span class="release-sys-name">🚀 FonTour</span><span class="rb rb-ft">FonTour</span></div>
+        <div style="position:relative;height:280px;margin-bottom:6px"><canvas id="ftChart"></canvas></div>
+        <!-- 備註區 -->
+        <div style="border-top:1px solid var(--border);margin-top:12px;padding-top:12px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+            <span style="font-size:11px;font-weight:600;color:var(--ink3)">📝 備註</span>
+            <button onclick="relOpenModal('ft')" style="font-size:11px;padding:3px 10px;border:1px solid var(--border2);border-radius:5px;background:var(--white);cursor:pointer;color:var(--blue)">✏️ 編輯</button>
+          </div>
+          <div id="ft-note" class="rel-note-view"></div>
+        </div>
+      </div>
+      <!-- FonTicket -->
+      <div class="release-card">
+        <div class="release-title-row"><span class="release-sys-name">🎫 FonTicket</span><span class="rb rb-fk">FonTicket</span></div>
+        <div style="position:relative;height:280px;margin-bottom:6px"><canvas id="fkChart"></canvas></div>
+        <div style="border-top:1px solid var(--border);margin-top:12px;padding-top:12px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+            <span style="font-size:11px;font-weight:600;color:var(--ink3)">📝 備註</span>
+            <button onclick="relOpenModal('fk')" style="font-size:11px;padding:3px 10px;border:1px solid var(--border2);border-radius:5px;background:var(--white);cursor:pointer;color:var(--blue)">✏️ 編輯</button>
+          </div>
+          <div id="fk-note" class="rel-note-view"></div>
+        </div>
+      </div>
+      <!-- Traveline -->
+      <div class="release-card">
+        <div class="release-title-row"><span class="release-sys-name">✈️ Traveline</span><span class="rb rb-tl">Traveline</span></div>
+        <div style="position:relative;height:280px;margin-bottom:6px"><canvas id="tlChart"></canvas></div>
+        <div style="border-top:1px solid var(--border);margin-top:12px;padding-top:12px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+            <span style="font-size:11px;font-weight:600;color:var(--ink3)">📝 備註</span>
+            <button onclick="relOpenModal('tl')" style="font-size:11px;padding:3px 10px;border:1px solid var(--border2);border-radius:5px;background:var(--white);cursor:pointer;color:var(--blue)">✏️ 編輯</button>
+          </div>
+          <div id="tl-note" class="rel-note-view"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 個人工作表現 -->
+  <div class="page" id="page-personal">
+    <div class="page-head"><h1>個人工作表現</h1><p>選擇人員查看個人績效指標</p></div>
+    <div class="personal-select-bar">
+      <span class="personal-select-label">選擇人員：</span>
+      <div class="personal-tabs" id="personalTabs"></div>
+    </div>
+    <div id="personalContent"><div class="no-data">請先選擇人員，並匯入相關資料</div></div>
+  </div>
+
+</div><!-- /main -->
+</div><!-- /body-wrap -->
+
+<script>
+// ══════════════════════════════════════
+//  設定
+// ══════════════════════════════════════
+const COLORS={'Iris':'#c94f3a','Jo':'#2a6049','Johnny':'#3a6ac8','Hippo':'#c8873a','Jine':'#7c4dbc','Joanna':'#d04e8a','Lala':'#1a8a6a','Lily':'#c07830','Emma':'#3a7ac8','Vicky':'#a040b0','飄飄':'#c8503a','stephen':'#2a8a40'};
+const IMPORT_TEAM=['Iris','Jo','Johnny','Hippo','Jine'];
+const SERVICE_TEAM=['Joanna','Lala','Lily','Emma','Vicky','飄飄','stephen'];
+const ALL_PERSONS=['Iris','Jo','Johnny','Hippo','Jine','Joanna','Lala','Lily','Emma','Vicky','飄飄','stephen'];
+const CONSULT_PERSONS=['Iris','Jo','Johnny']; // 揭露既有客戶諮詢時間的人員
+const COL_CH={C:2,D:3,E:4,P:15,Q:16,R:17,AB:27,AC:28,AD:29,AF:31,AH:33};
+// 每月業績各人員結案率所在行（0-based，對應CSV行索引）
+// 根據截圖：Iris結案率約row29, Jo~33, Johnny~37, Hippo~41, Jine~45, Joanna~57, Lala~61, 飄飄~69, Vicky~73
+const CASE_RATE_ROWS={'Iris':28,'Jo':32,'Johnny':36,'Hippo':40,'Jine':44,'Joanna':56,'Lala':60,'Lily':64,'飄飄':68,'Vicky':72};
+// 既有客戶諮詢目標 (C22、C23、C24 => Iris, Jo, Johnny 的目標)
+const CONSULT_TARGETS={'Iris':null,'Jo':null,'Johnny':null}; // 從CSV動態讀取
+
+const gc=n=>COLORS[n]||'#9a9690';
+const gi=n=>n?n.charAt(0).toUpperCase():'?';
+const fmt=n=>(n||n===0)?Number(n).toLocaleString('zh-TW'):'—';
+const fmtP=n=>{if(n==null||n===''||isNaN(parseFloat(n)))return'—';return parseFloat(n).toFixed(1)+'%';};
+const ml26=m=>`2026/${String(m).padStart(2,'0')}`;
+const ml25=m=>`2025/${String(m).padStart(2,'0')}`;
+
+let view='manager',month=1,currentPage='overview',selectedPerson='';
+let raw={util:null,monthly:null,channel:null,supplier:null,venue:null,yeargrowth:null,worklog:null,fontour:null,fonticket:null,traveline:null};
+let charts={};
+let pendingKey=null,sidebarCollapsed=false,importExpanded=false;
+
+// 匯入欄折疊
+const IMPORT_LABELS={util:'人力利用率',monthly:'每月業績',channel:'場域供應商',supplier:'供應商排名',venue:'場域排名',yeargrowth:'上架數(年度比)',worklog:'重要工作項目',fontour:'FonTour',fonticket:'FonTicket',traveline:'Traveline'};
+function toggleImport(){
+  importExpanded=!importExpanded;
+  document.getElementById('importBtns').style.display=importExpanded?'block':'none';
+  document.getElementById('importToggleBtn').textContent=importExpanded?'收合 ▲':'展開 ▼';
+}
+function updateImportStatus(){
+  const el=document.getElementById('importStatus');
+  el.innerHTML=Object.keys(IMPORT_LABELS).map(k=>{
+    const loaded=raw[k]!=null;
+    return`<span style="font-size:10px;padding:1px 6px;border-radius:4px;background:${loaded?'var(--upbg)':'var(--bg2)'};color:${loaded?'var(--up)':'var(--ink4)'};white-space:nowrap">${IMPORT_LABELS[k]}</span>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════
+//  Sidebar
+// ══════════════════════════════════════
+function toggleSidebar(){
+  sidebarCollapsed=!sidebarCollapsed;
+  const sb=document.getElementById('sidebar');
+  sb.classList.toggle('collapsed',sidebarCollapsed);
+  sb.querySelector('.sb-toggle-btn').textContent=sidebarCollapsed?'▶':'◀';
+}
+
+// ══════════════════════════════════════
+//  CSV Import
+// ══════════════════════════════════════
+function trigImp(key){pendingKey=key;const fi=document.getElementById('fileInput');fi.value='';fi.click();}
+function handleFile(e){
+  const file=e.target.files[0];if(!file||!pendingKey)return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    try{
+      raw[pendingKey]=parseCSV(ev.target.result);
+      const st=document.getElementById('st-'+pendingKey);
+      if(st){st.textContent=`✓${raw[pendingKey].length}列`;st.className='st ok';}
+      updateImportStatus();
+      updateMonthOpts();renderAll();
+    }catch(err){showErr('CSV解析失敗：'+err.message);}
+  };
+  reader.readAsText(file,'UTF-8');
+}
+function parseCSV(text){
+  return text.split(/\r?\n/).filter(l=>l.trim()).map(l=>{
+    const row=[];let cur='',inQ=false;
+    for(let i=0;i<l.length;i++){const c=l[i];if(c==='"'){inQ=!inQ;}else if(c===','&&!inQ){row.push(cur.trim());cur='';}else{cur+=c;}}
+    row.push(cur.trim());return row;
+  });
+}
+function showErr(msg){const b=document.getElementById('errorBox');b.style.display='block';b.textContent=msg;}
+
+// ══════════════════════════════════════
+//  Nav
+// ══════════════════════════════════════
+function navTo(page){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  document.getElementById('nav-'+page).classList.add('active');
+  currentPage=page;renderPage(page);
+}
+
+// ══════════════════════════════════════
+//  月份選項
+// ══════════════════════════════════════
+function updateMonthOpts(){
+  const rows=raw.supplier||raw.venue||raw.channel||[];
+  const ms=new Set();
+  rows.forEach(r=>{if(r&&r[0]&&r[0].startsWith('2026/')){const m=parseInt(r[0].split('/')[1]);if(!isNaN(m))ms.add(m);}});
+  if(!ms.size)return;
+  const sel=document.getElementById('monthSelect');sel.innerHTML='';
+  [...ms].sort((a,b)=>a-b).forEach(m=>{const o=document.createElement('option');o.value=m;o.textContent=String(m).padStart(2,'0')+'月';sel.appendChild(o);});
+  month=[...ms].sort((a,b)=>a-b).pop();sel.value=month;
+}
+
+// ══════════════════════════════════════
+//  解析工具
+// ══════════════════════════════════════
+const ni=v=>{const x=parseInt((v||'').toString().replace(/[,$\s]/g,''));return isNaN(x)?0:x;};
+const nn=v=>{const x=parseFloat((v||'').toString().replace(/[%,$\s]/g,''));return isNaN(x)?null:x;};
+const pct2num=v=>{if(!v)return null;const s=v.toString().replace('%','').trim();const x=parseFloat(s);return isNaN(x)?null:x;};
+
+function yoyHtml(cur,last){
+  if(!last||last===0)return'';
+  const p=((cur-last)/last*100);
+  return`<span class="stat-yoy ${p>=0?'yoy-up':'yoy-dn'}">${p>=0?'▲':'▼'} ${Math.abs(p).toFixed(1)}%</span>`;
+}
+function rankYoyHtml(cur,last){
+  if(!last||last===0)return`<span class="rank-yoy" style="background:var(--bg2);color:var(--ink3)">NEW</span>`;
+  const p=((cur-last)/last*100);
+  return`<span class="rank-yoy ${p>=0?'yoy-up':'yoy-dn'}">${p>=0?'▲':'▼'} ${Math.abs(p).toFixed(1)}%</span>`;
+}
+const vcls=v=>v==null?'vx':v>=85?'vg':v>=70?'va':'vr';
+function rankBadge(i){
+  const label='TOP'+(i+1);
+  if(i===0)return`<span class="rank-no r1" style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700">${label}</span>`;
+  if(i===1)return`<span class="rank-no r2" style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700">${label}</span>`;
+  if(i===2)return`<span class="rank-no r3" style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700">${label}</span>`;
+  return`<span class="rank-no rn" style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600">${label}</span>`;
+}
+function top3HTML(persons,mi){
+  const medals=['🥇','🥈','🥉'];
+  const sorted=[...persons].filter(p=>p.rates[mi]!=null).sort((a,b)=>(b.rates[mi]||0)-(a.rates[mi]||0)).slice(0,3);
+  if(!sorted.length)return'<div class="no-data" style="padding:10px">無資料</div>';
+  return sorted.map((p,i)=>`<div class="top3-row"><span class="top3-medal">${medals[i]}</span><div class="p-av" style="background:${gc(p.name)}18;color:${gc(p.name)}">${gi(p.name)}</div><span class="top3-name">${p.name}</span><span class="top3-val ${vcls(p.rates[mi])}">${fmtP(p.rates[mi])}</span></div>`).join('');
+}
+
+// ══════════════════════════════════════
+//  Chart
+// ══════════════════════════════════════
+function mkChart(id,config){
+  if(charts[id])charts[id].destroy();
+  const ctx=document.getElementById(id);if(!ctx)return;
+  charts[id]=new Chart(ctx.getContext('2d'),config);
+}
+const cd={
+  plugins:{legend:{labels:{color:'#4a4844',font:{size:11,family:'Noto Sans TC'},boxWidth:12}},tooltip:{backgroundColor:'#fff',borderColor:'#e2dfd8',borderWidth:1,titleColor:'#1a1916',bodyColor:'#4a4844'}},
+  scales:{x:{grid:{color:'#f0ede8'},ticks:{color:'#9a9690',font:{size:10}}},y:{grid:{color:'#f0ede8'},ticks:{color:'#9a9690',font:{size:10}}}}
+};
+
+// ══════════════════════════════════════
+//  Parse：人力利用率
+// ══════════════════════════════════════
+function parseUtil(){
+  const rows=raw.util||[];
+  if(!rows.length)return{persons:[],depts:{},caseRateImport:[],caseRateService:[]};
+  const res={persons:[],depts:{},caseRateImport:Array(12).fill(null),caseRateService:Array(12).fill(null)};
+
+  // Step1: 直接用行號取值
+  // 導入課人力利用率 = A32 = index 31，C欄開始(index 2)
+  // 客服課人力利用率 = A34 = index 33，C欄開始(index 2)
+  if(rows[31]){
+    res.depts.import=[];
+    for(let m=0;m<12;m++)res.depts.import.push(nn(rows[31][m+2]));
+  }
+  if(rows[33]){
+    res.depts.service=[];
+    for(let m=0;m<12;m++)res.depts.service.push(nn(rows[33][m+2]));
+  }
+
+  // Step2: 解析個人利用率（人名行 + 下一行月利用率）
+  let i=1;
+  while(i<rows.length){
+    const r=rows[i];if(!r||!r[0]){i++;continue;}
+    const cell=(r[0]||'').trim();
+    if(!cell||cell.length>12||cell.includes('課')||cell.includes('率')||cell.includes('時')||cell.includes('項')||cell.includes('整')){i++;continue;}
+    if(!COLORS[cell]){i++;continue;}
+    const next=rows[i+1]||[];
+    const nextHasRate=(next[0]||'').includes('利用率')||(next[1]||'').includes('利用率');
+    const rates=[];
+    if(nextHasRate){for(let m=0;m<12;m++)rates.push(nn(next[m+2]));i+=2;}
+    else{for(let m=0;m<12;m++)rates.push(null);i++;}
+    if(!res.persons.find(p=>p.name===cell))res.persons.push({name:cell,rates});
+  }
+  return res;
+}
+
+// ══════════════════════════════════════
+//  Parse：每月業績（結案率、標準化文件、諮詢時間）
+// ══════════════════════════════════════
+function parseMonthly(){
+  const rows=raw.monthly||[];
+  if(!rows.length)return{ability:{},caseRate:{},stdDoc:{},consult:{}};
+  const res={ability:{},caseRate:{},stdDoc:{},consult:{}};
+
+  // 找提升個人能力區段
+  let inAb=false;
+  rows.forEach((r,idx)=>{
+    if(!r)return;
+    const kpi=(r[0]||'').trim();
+    if(kpi.includes('提升個人能力'))inAb=true;
+    if(!inAb)return;
+    const name=(r[1]||'').trim();
+    if(!name||name.length===0||name.length>12)return;
+    const target=ni(r[2]);const monthly=[];
+    for(let m=0;m<12;m++)monthly.push(ni(r[m+3]));
+    res.ability[name]={target,monthly};
+  });
+
+  // 找標準化文件數（第一個KPI區段）
+  let inStd=false;
+  rows.forEach(r=>{
+    if(!r)return;
+    const kpi=(r[0]||'').trim();
+    if(kpi.includes('標準化文件'))inStd=true;
+    if(inStd&&kpi.includes('全服務'))inStd=false;
+    if(!inStd)return;
+    const name=(r[1]||'').trim();
+    if(!name||name.length>12||!COLORS[name])return;
+    const target=ni(r[2]);const monthly=[];
+    for(let m=0;m<12;m++)monthly.push(ni(r[m+3]));
+    res.stdDoc[name]={target,monthly};
+  });
+
+  // 找各人員結案率與諮詢時間
+  // 根據截圖：每個人有一組行（累積服務總次數、已結案數、未結案數、結案率、個人累積服務次數）
+  // 諮詢時間目標在 C22、C23、C24
+  let personBlocks=[];
+  let curPerson=null;
+  rows.forEach((r,idx)=>{
+    if(!r)return;
+    const name=(r[1]||'').trim();
+    if(name&&COLORS[name]&&(r[2]||'').includes('個人累積')){
+      curPerson=name;
+    }
+    if(curPerson&&(r[2]||'').includes('結案率')){
+      const monthly=[];
+      for(let m=0;m<12;m++)monthly.push(pct2num(r[m+3]));
+      if(!res.caseRate[curPerson])res.caseRate[curPerson]=monthly;
+    }
+  });
+
+  // 諮詢服務時間：找「既有客戶平均每月諮詢服務時間」區段
+  let inConsult=false;
+  rows.forEach(r=>{
+    if(!r)return;
+    const kpi=(r[0]||'').trim();
+    if(kpi.includes('既有客戶')&&kpi.includes('諮詢'))inConsult=true;
+    if(inConsult&&kpi.includes('整體'))inConsult=false;
+    if(!inConsult)return;
+    const name=(r[1]||'').trim();
+    if(!CONSULT_PERSONS.includes(name))return;
+    const target=ni(r[2]);
+    const monthly=[];
+    for(let m=0;m<12;m++)monthly.push(ni(r[m+3]));
+    res.consult[name]={target,monthly};
+  });
+
+  return res;
+}
+
+// ══════════════════════════════════════
+//  Parse：每月產品上架數 (F~H欄)
+//  F=月份(1月~12月), G=項目名稱, H=累積完成數
+// ══════════════════════════════════════
+function parseYearGrowth(){
+  const rows=raw.yeargrowth||[];if(!rows.length)return null;
+  const mMap={};
+  ['01月','02月','03月','04月','05月','06月','07月','08月','09月','10月','11月','12月'].forEach((v,i)=>mMap[v]=i);
+  ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'].forEach((v,i)=>mMap[v]=i);
+  const data={
+    y25travel:Array(12).fill(null),y26travel:Array(12).fill(null),
+    y25system:Array(12).fill(null),y26system:Array(12).fill(null),
+    y25special:Array(12).fill(null),y26special:Array(12).fill(null)
+  };
+  rows.forEach(r=>{
+    const mStr=(r[5]||'').trim(),item=(r[6]||'').trim(),val=ni(r[7]);
+    const mi=mMap[mStr];if(mi===undefined)return;
+    if(item.includes('2025')&&item.includes('旅遊'))data.y25travel[mi]=val;
+    if(item.includes('2026')&&item.includes('旅遊'))data.y26travel[mi]=val;
+    if(item.includes('2025')&&item.includes('系統'))data.y25system[mi]=val;
+    if(item.includes('2026')&&item.includes('系統'))data.y26system[mi]=val;
+    if(item.includes('2025')&&(item.includes('專案')||item.includes('專業')))data.y25special[mi]=val;
+    if(item.includes('2026')&&(item.includes('專案')||item.includes('專業')))data.y26special[mi]=val;
+  });
+  return data;
+}
+
+// ══════════════════════════════════════
+//  Parse：供應商/場域排名
+// ══════════════════════════════════════
+function parseSupplier(m){
+  return (raw.supplier||[]).filter(r=>r&&r[0]===ml26(m)).map(r=>({
+    name:r[2]||'—',qty:ni(r[3]),amt:ni(r[4]),time:ni(r[5]),
+    avgPerMin:nn(r[6])||0,lastQty:ni(r[7]),lastAmt:ni(r[8]),lastTime:ni(r[9]),
+  })).slice(0,10);
+}
+function parseVenue(m){
+  return (raw.venue||[]).filter(r=>r&&r[0]===ml26(m)).map(r=>({
+    type:r[2]||'',name:r[3]||'—',
+    visits:ni(r[4]),amt:ni(r[5]),time:ni(r[6]),avgPerMin:nn(r[7])||0,
+    lastVisits:ni(r[8]),lastAmt:ni(r[9]),lastTime:ni(r[10]),
+  })).slice(0,10);
+}
+
+// ══════════════════════════════════════
+//  Parse：Channel
+// ══════════════════════════════════════
+function getChRow(year,m){
+  const label=year===2025?ml25(m):ml26(m);
+  return (raw.channel||[]).find(r=>r&&r[0]===label)||null;
+}
+function getChAll(year){
+  const prefix=year===2025?'2025/':'2026/';
+  return (raw.channel||[]).filter(r=>r&&r[0]&&r[0].startsWith(prefix)).slice(0,12);
+}
+
+// ══════════════════════════════════════
+//  Parse：Release
+// ══════════════════════════════════════
+// ══ 解析 Release年度累積數 CSV（橫向表格）══
+// 結構：A~F=FonTour, H~M=FonTicket, O~T=Traveline
+// row[0]:系統名, row[1]:欄位名, row[2]:2025累計, row[3]:2026累計
+// 欄位: index 1~5(B~F)=新功能/Bug/程式邏輯調整/產品線功能優化/使用者功能優化
+const RELEASE_ITEMS=['新功能','Bug','程式邏輯調整','產品線功能優化','使用者功能優化'];
+function parseReleaseAccum(){
+  const rows=raw.fontour||[];// 匯入 Release年度累積數
+  if(!rows.length)return null;
+  // FonTour: 欄 A(0)~F(5)，從col 1開始是5個項目
+  // FonTicket: 欄 H(7)~M(12)
+  // Traveline: 欄 O(14)~T(19)
+  const offsets={ft:0, fk:7, tl:14};
+  const result={};
+  Object.entries(offsets).forEach(([key,off])=>{
+    const y25=[], y26=[];
+    for(let i=0;i<5;i++){
+      y25.push(ni(rows[2]?.[off+1+i])||0);
+      y26.push(ni(rows[3]?.[off+1+i])||0);
+    }
+    result[key]={y25,y26};
+  });
+  return result;
+}
+// Release 筆記 localStorage
+const REL_NOTE_KEY='release_notes';
+function relGetNotes(){try{return JSON.parse(localStorage.getItem(REL_NOTE_KEY)||'{}')}catch{return{}}}
+function relSetNotes(obj){localStorage.setItem(REL_NOTE_KEY,JSON.stringify(obj))}
+let relCurrentKey='';
+function relOpenModal(key){
+  relCurrentKey=key;
+  const names={ft:'FonTour',fk:'FonTicket',tl:'Traveline'};
+  document.getElementById('rel-modal-title').textContent='✏️ 編輯備註 — '+names[key];
+  const notes=relGetNotes();
+  document.getElementById('rel-editor').innerHTML=notes[key]||'';
+  document.getElementById('rel-modal').style.display='flex';
+  document.body.style.overflow='hidden';
+}
+function relCloseModal(){
+  document.getElementById('rel-modal').style.display='none';
+  document.body.style.overflow='';
+}
+function relCmd(cmd,val){document.getElementById('rel-editor').focus();document.execCommand(cmd,false,val||null);}
+function relSave(){
+  const html=document.getElementById('rel-editor').innerHTML;
+  const notes=relGetNotes();
+  notes[relCurrentKey]=html;
+  relSetNotes(notes);
+  const msg=document.getElementById('rel-save-msg');
+  msg.style.display='block';
+  setTimeout(()=>{msg.style.display='none';relCloseModal();renderRelease();},1000);
+}
+document.addEventListener('click',function(e){
+  const m=document.getElementById('rel-modal');
+  if(e.target===m)relCloseModal();
+});
+
+function parseRelease(csvKey){
+  const rows=raw[csvKey]||[];if(!rows.length)return null;
+  const mLabelRe=/^(20\d\d)\/(0?[1-9]|1[0-2])/;
+  const blocks=[];
+  for(let i=0;i<rows.length;i++){
+    const r=rows[i];if(!r||!r[0])continue;
+    const m=r[0].match(mLabelRe);
+    if(m)blocks.push({year:parseInt(m[1]),month:parseInt(m[2]),startRow:i});
+  }
+  const result={
+    y25:{total:Array(12).fill(null),dept:Array(12).fill(null)},
+    y26:{total:Array(12).fill(null),dept:Array(12).fill(null)},
+    latestBlock:null
+  };
+  blocks.forEach(b=>{
+    // 總計行在 startRow+7（項目：新功能,Bug,程式邏輯,產品線,使用者功能優化,總計）
+    const totalRow=rows[b.startRow+7];
+    if(!totalRow)return;
+    const mi=b.month-1;
+    // B欄(idx1)=研發處, C=創新, D=旅遊產品, E=系統服務發展部(idx4), F=管理本部
+    const allTotal=ni(totalRow[1])+ni(totalRow[2])+ni(totalRow[3])+ni(totalRow[4])+ni(totalRow[5]);
+    const dept=ni(totalRow[4]);
+    if(b.year===2025){result.y25.total[mi]=allTotal;result.y25.dept[mi]=dept;}
+    if(b.year===2026){
+      result.y26.total[mi]=allTotal;result.y26.dept[mi]=dept;
+      result.latestBlock=b; // 記錄最新區塊供詳細顯示
+    }
+  });
+  // 取最後一個2026區塊的明細
+  if(result.latestBlock){
+    const b=result.latestBlock;
+    const items=['新功能','Bug','程式邏輯調整','產品線功能優化','使用者功能優化'];
+    const depts=['研發處','創新服務部','旅遊產品發展部','系統服務發展部','管理本部/財務課'];
+    result.detail=[];
+    for(let ri=0;ri<5;ri++){
+      const r=rows[b.startRow+2+ri];if(!r)continue;
+      const itemName=items[ri];
+      const nums=depts.map((_,di)=>ni(r[di+1]));
+      const total=nums.reduce((a,b)=>a+b,0);
+      if(total>0)result.detail.push({item:itemName,nums,total});
+    }
+    result.detailDepts=depts;
+    result.latestMonth=b.month;
+    result.latestYear=b.year;
+  }
+  return result;
+}
+
+// ══════════════════════════════════════
+//  Parse：重要工作項目
+// ══════════════════════════════════════
+function parseWorklog(m){
+  const rows=raw.worklog||[];if(!rows.length)return null;
+  const label=`2026/${String(m).padStart(2,'0')}`;
+  // A欄=年月(如 2026/01 或 2026/1/1), B欄=內容
+  const row=rows.find(r=>{
+    if(!r||!r[0])return false;
+    const a=(r[0]||'').trim();
+    return a.startsWith(label)||a===`2026/${m}`||a.startsWith(`2026/${String(m).padStart(2,'0')}`);
+  });
+  return row?row[1]:null;
+}
+
+// ══════════════════════════════════════
+//  Channel HTML（無 vs去年文字）
+// ══════════════════════════════════════
+function buildChannelHTML(row26,row25){
+  if(!row26)return'<div class="no-data">此月份無2026資料</div>';
+  const c=COL_CH;
+  const v26=idx=>ni(row26[idx]);
+  const v25=idx=>row25?ni(row25[idx]):0;
+  function sc(label,col,isMoney=false,showYoy=false){
+    const cur=v26(col),last=v25(col);
+    return`<div class="stat-card"><div class="stat-label">${label}</div><div class="stat-val">${isMoney?'$'+fmt(cur):fmt(cur)}</div>${showYoy?yoyHtml(cur,last):''}</div>`;
+  }
+  return`
+    <div class="row-title">📍 場域服務</div>
+    <div class="g3" style="margin-bottom:4px">${sc('既有場域服務數',c.C)}${sc('服務人次',c.D)}${sc('系統營收',c.E,true,true)}</div>
+    <div class="row-title">🤝 供應商</div>
+    <div class="g3" style="margin-bottom:4px">${sc('供應商服務數',c.P)}${sc('供應商核銷數量',c.Q)}${sc('供應商核銷金額',c.R,true,true)}</div>
+    <div class="row-title">🛒 通路</div>
+    <div class="g5">${sc('通路服務數',c.AB)}${sc('通路銷售數量',c.AC)}${sc('通路銷售金額',c.AD,true,true)}${sc('B2C銷售金額',c.AF,true,true)}${sc('B2B銷售金額',c.AH,true,true)}</div>`;
+}
+
+// ══════════════════════════════════════
+//  結案率 HTML
+// ══════════════════════════════════════
+function buildCaseRateHTML(importRates,serviceRates){
+  const mL=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+  function rateCard(label,rates){
+    const chips=mL.map((ml,i)=>{
+      const v=rates[i];
+      const cls=v==null?'crm-na':v>=99?'crm-hit':'crm-miss';
+      return`<div class="case-rate-card"><div class="crm-label">${ml}</div><div class="crm-val ${cls}">${v!=null?v.toFixed(1)+'%':'—'}</div></div>`;
+    }).join('');
+    return`<div style="margin-bottom:10px"><div style="font-size:11px;font-weight:600;color:var(--ink3);margin-bottom:6px">${label}</div><div class="case-rate-grid">${chips}</div></div>`;
+  }
+  return buildCaseRateHTMLRaw(importRates,serviceRates);
+}
+function buildCaseRateHTMLRaw(importRates,serviceRates){
+  const mL=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+  function rows(label,rates){
+    const chips=mL.map((ml,i)=>{
+      const v=rates?rates[i]:null;
+      const cls=v==null?'crm-na':v>=99?'crm-hit':'crm-miss';
+      return`<div class="case-rate-card"><div class="crm-label">${ml}</div><div class="crm-val ${cls}">${v!=null?v.toFixed(1)+'%':'—'}</div></div>`;
+    }).join('');
+    return`<div style="margin-bottom:8px"><div style="font-size:11px;font-weight:600;color:var(--ink2);margin-bottom:5px">${label}</div><div class="case-rate-grid">${chips}</div></div>`;
+  }
+  return rows('導入課結案率',importRates)+rows('客服課結案率',serviceRates);
+}
+
+// ══════════════════════════════════════
+//  Ranking 項目
+// ══════════════════════════════════════
+function renderRankingItem(r,i,isVenue){
+  const lastAvg=r.lastTime>0?r.lastAmt/r.lastTime:0;
+  const amtYoy=rankYoyHtml(r.amt,r.lastAmt);
+  const avgYoy=rankYoyHtml(r.avgPerMin,lastAvg);
+  const subText=isVenue?`服務人次 ${fmt(r.visits)}｜服務時間 ${fmt(r.time)} 分`:`核銷 ${fmt(r.qty)} 筆｜服務時間 ${fmt(r.time)} 分`;
+  return`<div class="rank-row">${rankBadge(i)}<div class="rank-info"><div class="rank-name">${r.name}${r.type?`<span class="type-chip">${r.type}</span>`:''}</div><div class="rank-sub">${subText}</div></div><div class="rank-metrics"><div class="rank-amt">$${fmt(r.amt)} ${amtYoy}</div><div class="rank-amt-sub">去年 $${fmt(r.lastAmt)}</div><div class="rank-avg-row">均額/分 ${r.avgPerMin?r.avgPerMin.toFixed(0):'—'} ${avgYoy}</div></div></div>`;
+}
+
+// ══════════════════════════════════════
+//  Release 詳細表（參照圖二長條圖+表格）
+// ══════════════════════════════════════
+function buildReleaseDetail(data,color){
+  if(!data||!data.detail||!data.detail.length)return'<div class="no-data" style="padding:10px">請匯入資料</div>';
+  const depts=data.detailDepts||[];
+  // 長條圖
+  const chartId='relDetailChart_'+Math.random().toString(36).slice(2,7);
+  const deptColors=['#3a6ac8','#c94f3a','#2a6049','#7c4dbc','#c8873a'];
+  // 表格
+  const tableRows=data.detail.map(d=>{
+    const nonZero=d.nums.map((n,di)=>n>0?`<tr><td></td><td class="num-col">${n}</td><td>${d.item}</td><td>${depts[di]||''}</td><td class="num-col">${n}</td><td></td></tr>`:'').filter(Boolean).join('');
+    return`<tr><td class="cat-label" rowspan="${d.nums.filter(n=>n>0).length||1}">${d.item}</td><td class="num-col">${d.total}</td><td colspan="4" style="padding:0"><table style="width:100%">${d.nums.map((n,di)=>n>0?`<tr><td style="padding:4px 10px">${d.item}</td><td style="padding:4px 10px">${depts[di]||''}</td><td style="padding:4px 10px;text-align:center;font-weight:600">${n}</td></tr>`:'').filter(Boolean).join('')}</table></td></tr>`;
+  }).join('');
+
+  const canvasHtml=`<div style="height:180px;position:relative;margin-bottom:14px"><canvas id="${chartId}"></canvas></div>`;
+  const tblHtml=`<table class="release-detail-table">
+    <tr><th>項目</th><th>總數</th><th>性質</th><th>成本計價部門</th><th>數量</th><th>備註</th></tr>
+    ${data.detail.map(d=>{
+      const nonZeroItems=d.nums.map((n,di)=>({n,dept:depts[di]})).filter(x=>x.n>0);
+      if(!nonZeroItems.length)return'';
+      return nonZeroItems.map((item,ii)=>`<tr>
+        ${ii===0?`<td class="cat-label" rowspan="${nonZeroItems.length}">${d.item}</td><td class="num-col" rowspan="${nonZeroItems.length}">${d.total}</td>`:''}
+        <td>${d.item}</td><td>${item.dept}</td><td class="num-col">${item.n}</td><td></td>
+      </tr>`).join('');
+    }).join('')}
+  </table>`;
+
+  setTimeout(()=>{
+    const ctx=document.getElementById(chartId);if(!ctx)return;
+    if(charts[chartId])charts[chartId].destroy();
+    charts[chartId]=new Chart(ctx.getContext('2d'),{
+      type:'bar',
+      data:{
+        labels:data.detail.map(d=>d.item),
+        datasets:depts.map((dept,di)=>({
+          label:dept,
+          data:data.detail.map(d=>d.nums[di]),
+          backgroundColor:deptColors[di]+'cc',
+          borderRadius:3,
+        }))
+      },
+      options:{responsive:true,maintainAspectRatio:false,...cd,scales:{x:{...cd.scales.x,stacked:true},y:{...cd.scales.y,stacked:true,ticks:{...cd.scales.y.ticks,stepSize:1}}}}
+    });
+  },100);
+
+  return canvasHtml+tblHtml;
+}
+
+// ══════════════════════════════════════
+//  渲染
+// ══════════════════════════════════════
+function renderOverview(){
+  const ud=parseUtil();const mi=month-1;
+  const ir=ud.depts.import?.[mi],sr=ud.depts.service?.[mi];
+  document.getElementById('chDesc').textContent=`${month}月數據`;
+  document.getElementById('channelSummaryCard').innerHTML=buildChannelHTML(getChRow(2026,month),getChRow(2025,month));
+  document.getElementById('utilKpiCards').innerHTML=`
+    <div class="stat-card" style="margin-bottom:8px"><div class="stat-label">導入課 ${month}月利用率</div><div class="stat-val ${vcls(ir)}">${ir!=null?fmtP(ir):'—'}</div></div>
+    <div class="stat-card"><div class="stat-label">客服課 ${month}月利用率</div><div class="stat-val ${vcls(sr)}">${sr!=null?fmtP(sr):'—'}</div></div>`;
+  const importP=ud.persons.filter(p=>IMPORT_TEAM.includes(p.name));
+  const serviceP=ud.persons.filter(p=>SERVICE_TEAM.includes(p.name));
+  const allP=ud.persons;
+  document.getElementById('importTop3').innerHTML=top3HTML(importP.length?importP:allP,mi);
+  document.getElementById('serviceTop3').innerHTML=top3HTML(serviceP.length?serviceP:allP,mi);
+  // 成長圖
+  const yg=parseYearGrowth();
+  const mL=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+  if(yg){
+    mkChart('growthChart',{type:'line',data:{labels:mL,datasets:[
+      {label:'2025年累積',data:yg.y25travel.map((v,i)=>(v||0)+(yg.y25system[i]||0)),borderColor:'#9a9690',backgroundColor:'rgba(154,150,144,.08)',borderWidth:2,pointRadius:3,tension:.4,fill:true,spanGaps:true},
+      {label:'2026年累積',data:yg.y26travel.map((v,i)=>(v||0)+(yg.y26system[i]||0)),borderColor:gc('Jo'),backgroundColor:gc('Jo')+'15',borderWidth:2.5,pointRadius:3,tension:.4,fill:true,spanGaps:true},
+    ]},options:{responsive:true,maintainAspectRatio:false,...cd}});
+  }
+}
+
+// ══ 工作日誌 - Modal 編輯器
+const WL_KEY='worklog_records';
+
+// 產生顯示模式 HTML
+function wlViewHTML(rec,key){
+  return '<div style="font-size:11px;color:var(--ink3);margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border)">更新：'+rec.updatedAt+'</div>'
+    +'<div id="wl-content-display" style="font-size:13px;line-height:1.8;color:var(--ink2);min-height:200px">'+rec.html+'</div>'
+    +'<div style="display:flex;gap:8px;margin-top:20px;padding-top:14px;border-top:1px solid var(--border);justify-content:flex-end">'
+    +'<button onclick="wlStartEdit(\''+key+'\')" style="font-size:12px;padding:5px 16px;border:1px solid var(--border2);border-radius:5px;background:var(--white);cursor:pointer;color:var(--blue);font-family:\'Noto Sans TC\',sans-serif">✏️ 編輯</button>'
+    +'<button onclick="wlDelete(\''+key+'\')" style="font-size:12px;padding:5px 16px;border:1px solid var(--border2);border-radius:5px;background:var(--white);cursor:pointer;color:var(--accent3);font-family:\'Noto Sans TC\',sans-serif">🗑️ 刪除</button>'
+    +'</div>';
+}
+
+// 產生編輯模式 HTML（內嵌編輯器，不彈 modal）
+function wlEditHTML(rec,key){
+  return '<div style="font-size:11px;color:var(--ink3);margin-bottom:10px">編輯中：'+key+'</div>'
+    +'<input id="wl-inline-title" type="text" value="'+rec.title+'" placeholder="標題..." style="width:100%;border:1px solid var(--border2);border-radius:6px;padding:7px 10px;font-size:13px;font-family:\'Noto Sans TC\',sans-serif;color:var(--ink);outline:none;background:var(--bg);margin-bottom:10px">'
+    +'<div style="display:flex;gap:2px;padding:6px 8px;background:var(--bg2);border:1px solid var(--border2);border-radius:6px 6px 0 0;flex-wrap:wrap">'
+    +'<button onclick="wlInlineCmd(\'bold\')" style="width:28px;height:28px;border:1px solid var(--border);border-radius:4px;background:var(--white);cursor:pointer;font-weight:700;font-size:13px">B</button>'
+    +'<button onclick="wlInlineCmd(\'italic\')" style="width:28px;height:28px;border:1px solid var(--border);border-radius:4px;background:var(--white);cursor:pointer;font-style:italic;font-size:13px">I</button>'
+    +'<button onclick="wlInlineCmd(\'underline\')" style="width:28px;height:28px;border:1px solid var(--border);border-radius:4px;background:var(--white);cursor:pointer;text-decoration:underline;font-size:13px">U</button>'
+    +'<button onclick="wlInlineCmd(\'strikeThrough\')" style="width:28px;height:28px;border:1px solid var(--border);border-radius:4px;background:var(--white);cursor:pointer;text-decoration:line-through;font-size:13px">S</button>'
+    +'<div style="width:1px;background:var(--border);margin:2px 4px"></div>'
+    +'<button onclick="wlInlineCmd(\'formatBlock\',\'h2\')" style="padding:0 8px;height:28px;border:1px solid var(--border);border-radius:4px;background:var(--white);cursor:pointer;font-size:11px;font-weight:600">H1</button>'
+    +'<button onclick="wlInlineCmd(\'formatBlock\',\'h3\')" style="padding:0 8px;height:28px;border:1px solid var(--border);border-radius:4px;background:var(--white);cursor:pointer;font-size:11px;font-weight:600">H2</button>'
+    +'<button onclick="wlInlineCmd(\'formatBlock\',\'h4\')" style="padding:0 8px;height:28px;border:1px solid var(--border);border-radius:4px;background:var(--white);cursor:pointer;font-size:11px;font-weight:600">H3</button>'
+    +'<div style="width:1px;background:var(--border);margin:2px 4px"></div>'
+    +'<button onclick="wlInlineCmd(\'insertUnorderedList\')" style="width:28px;height:28px;border:1px solid var(--border);border-radius:4px;background:var(--white);cursor:pointer;font-size:14px">≡</button>'
+    +'<button onclick="wlInlineCmd(\'insertOrderedList\')" style="width:28px;height:28px;border:1px solid var(--border);border-radius:4px;background:var(--white);cursor:pointer;font-size:14px">≔</button>'
+    +'<div style="width:1px;background:var(--border);margin:2px 4px"></div>'
+    +'<button onclick="wlInlineCmd(\'justifyLeft\')" style="width:28px;height:28px;border:1px solid var(--border);border-radius:4px;background:var(--white);cursor:pointer;font-size:13px">⬅</button>'
+    +'<button onclick="wlInlineCmd(\'justifyCenter\')" style="width:28px;height:28px;border:1px solid var(--border);border-radius:4px;background:var(--white);cursor:pointer;font-size:13px">⬌</button>'
+    +'<div style="width:1px;background:var(--border);margin:2px 4px"></div>'
+    +'<button onclick="wlInlineCmd(\'undo\')" style="width:28px;height:28px;border:1px solid var(--border);border-radius:4px;background:var(--white);cursor:pointer;font-size:13px">↩</button>'
+    +'<button onclick="wlInlineCmd(\'redo\')" style="width:28px;height:28px;border:1px solid var(--border);border-radius:4px;background:var(--white);cursor:pointer;font-size:13px">↪</button>'
+    +'</div>'
+    +'<div id="wl-inline-editor" contenteditable="true" data-key="'+key+'" '
+    +'style="min-height:300px;max-height:600px;border:1px solid var(--border2);border-top:none;border-radius:0 0 6px 6px;padding:12px 14px;font-size:13px;font-family:\'Noto Sans TC\',sans-serif;line-height:1.8;color:var(--ink);outline:none;background:var(--white);overflow-y:auto;resize:vertical">'
+    +rec.html
+    +'</div>'
+    +'<div style="display:flex;gap:8px;margin-top:14px;justify-content:flex-end">'
+    +'<button onclick="wlInlineSave(\''+key+'\')" style="padding:7px 20px;background:var(--accent);color:white;border:none;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;font-family:\'Noto Sans TC\',sans-serif">💾 儲存</button>'
+    +'<button onclick="wlInlineCancel(\''+key+'\')" style="padding:7px 14px;background:var(--bg2);color:var(--ink3);border:1px solid var(--border);border-radius:6px;font-size:13px;cursor:pointer;font-family:\'Noto Sans TC\',sans-serif">取消</button>'
+    +'</div>';
+}
+
+// 啟動內嵌編輯
+function wlStartEdit(key){
+  const rec=wlGetAll().find(r=>r.key===key);
+  if(!rec)return;
+  const viewEl=document.getElementById('worklogContent');
+  if(!viewEl)return;
+  viewEl.innerHTML=wlEditHTML(rec,key);
+  const ed=document.getElementById('wl-inline-editor');
+  if(ed)ed.focus();
+}
+
+// 內嵌編輯器指令
+function wlInlineCmd(cmd,val){
+  const ed=document.getElementById('wl-inline-editor');
+  if(ed){ed.focus();document.execCommand(cmd,false,val||null);}
+}
+
+// 內嵌儲存
+function wlInlineSave(key){
+  const ed=document.getElementById('wl-inline-editor');
+  const titleInput=document.getElementById('wl-inline-title');
+  if(!ed)return;
+  const html=ed.innerHTML.trim();
+  if(!html||html==='<br>'){alert('內容不可空白');return;}
+  const records=wlGetAll();
+  const idx=records.findIndex(r=>r.key===key);
+  if(idx<0)return;
+  records[idx].html=html;
+  if(titleInput)records[idx].title=titleInput.value.trim()||records[idx].title;
+  records[idx].updatedAt=new Date().toLocaleString('zh-TW');
+  wlSetAll(records);
+  // 儲存後切回顯示模式
+  const viewEl=document.getElementById('worklogContent');
+  if(viewEl)viewEl.innerHTML=wlViewHTML(records[idx],key);
+  renderWorklogList();
+}
+
+// 取消編輯，回到顯示模式
+function wlInlineCancel(key){
+  const rec=wlGetAll().find(r=>r.key===key);
+  if(!rec)return;
+  const viewEl=document.getElementById('worklogContent');
+  if(viewEl)viewEl.innerHTML=wlViewHTML(rec,key);
+}
+function wlOpenModal(key){
+  const modal=document.getElementById('wl-modal');
+  modal.style.display='flex';
+  document.body.style.overflow='hidden';
+  if(key){
+    // 載入既有紀錄編輯
+    const rec=wlGetAll().find(r=>r.key===key);
+    if(rec){
+      document.getElementById('wl-title').value=rec.title||'';
+      document.getElementById('wl-editor').innerHTML=rec.html||'';
+      const [yr,mo]=key.split('/');
+      document.getElementById('wl-year').value=yr;
+      document.getElementById('wl-month').value=parseInt(mo);
+    }
+  } else {
+    // 新增：預設當前月份
+    document.getElementById('wl-title').value='';
+    document.getElementById('wl-editor').innerHTML='';
+    document.getElementById('wl-year').value='2026';
+    document.getElementById('wl-month').value=month;
+  }
+  setTimeout(()=>document.getElementById('wl-editor').focus(),100);
+}
+function wlCloseModal(){
+  document.getElementById('wl-modal').style.display='none';
+  document.body.style.overflow='';
+}
+// 點 modal 背景關閉
+document.addEventListener('click',function(e){
+  const modal=document.getElementById('wl-modal');
+  if(e.target===modal)wlCloseModal();
+});
+const WL_KEY_DUMMY='';// dummy
+function wlGetAll(){try{return JSON.parse(localStorage.getItem(WL_KEY)||'[]');}catch{return[];}}
+function wlSetAll(arr){localStorage.setItem(WL_KEY,JSON.stringify(arr));}
+function wlCmd(cmd,val){document.getElementById('wl-editor').focus();document.execCommand(cmd,false,val||null);}
+function wlUndo(){document.execCommand('undo');}
+function wlRedo(){document.execCommand('redo');}
+function wlSave(){
+  const title=document.getElementById('wl-title').value.trim();
+  const yr=document.getElementById('wl-year').value;
+  const mo=document.getElementById('wl-month').value;
+  const html=document.getElementById('wl-editor').innerHTML.trim();
+  if(!html||html==='<br>'||html===''){alert('內容不可空白');return;}
+  const records=wlGetAll();
+  const key=yr+'/'+String(mo).padStart(2,'0');
+  const idx=records.findIndex(r=>r.key===key);
+  const rec={key,year:yr,month:mo,title:title||key+' 工作成果',html,updatedAt:new Date().toLocaleString('zh-TW')};
+  if(idx>=0)records[idx]=rec; else records.unshift(rec);
+  wlSetAll(records);
+  // 儲存後清空並關閉 modal
+  document.getElementById('wl-title').value='';
+  document.getElementById('wl-editor').innerHTML='';
+  const msg=document.getElementById('wl-save-msg');
+  msg.style.display='block';
+  setTimeout(()=>{msg.style.display='none';wlCloseModal();},1200);
+  renderWorklogView();
+}
+function wlClear(){
+  document.getElementById('wl-title').value='';
+  document.getElementById('wl-editor').innerHTML='';
+}
+function wlLoad(key){wlOpenModal(key);}
+function wlDelete(key){
+  if(!confirm('確定刪除此紀錄？'))return;
+  let records=wlGetAll();
+  records=records.filter(r=>r.key!==key);
+  wlSetAll(records);
+  const viewEl=document.getElementById('worklogContent');
+  if(viewEl)viewEl.innerHTML='<div class="no-data">請從左側選擇月份</div>';
+  renderWorklogList();
+}
+function wlViewRecord(key){
+  const records=wlGetAll();
+  const rec=records.find(r=>r.key===key);
+  const viewEl=document.getElementById('worklogContent');
+  
+  if(!viewEl)return;
+  
+  if(rec){
+    viewEl.innerHTML='<div style="font-size:12px;font-weight:600;font-family:\'Noto Serif TC\',serif;margin-bottom:8px;color:var(--accent)">'+rec.title+'</div><div style="font-size:11px;color:var(--ink3);margin-bottom:14px">更新：'+rec.updatedAt+'</div><div style="font-size:13px;line-height:1.8;color:var(--ink2);min-height:200px">'+rec.html+'</div><div style="display:flex;gap:8px;margin-top:20px;padding-top:14px;border-top:1px solid var(--border);justify-content:flex-end"><button onclick="wlOpenModal(\''+key+'\'  )" style="font-size:12px;padding:5px 14px;border:1px solid var(--border2);border-radius:5px;background:var(--white);cursor:pointer;color:var(--blue);font-family:\'Noto Sans TC\',sans-serif">✏️ 編輯</button><button onclick="wlDelete(\''+key+'\')" style="font-size:12px;padding:5px 14px;border:1px solid var(--border2);border-radius:5px;background:var(--white);cursor:pointer;color:var(--accent3);font-family:\'Noto Sans TC\',sans-serif">🗑️ 刪除</button></div>';
+  }
+  // 右側滾到頂端
+  const right=document.getElementById('wl-right');
+  if(right)right.scrollTop=0;
+}
+function renderWorklogList(){
+  const listEl=document.getElementById('wl-record-list');
+  if(!listEl)return;
+  const records=wlGetAll();
+  if(!records.length){listEl.innerHTML='<div style="font-size:12px;color:var(--ink4);padding:6px 8px">尚無紀錄</div>';return;}
+  listEl.innerHTML=records.map(r=>'<div style="padding:5px 8px;border-radius:6px;transition:background .15s" onmouseover="this.style.background=\'var(--alight)\'" onmouseout="this.style.background=\'transparent\'"><a href="#" onclick="wlViewRecord(\''+r.key+'\');return false;" style="font-family:\'JetBrains Mono\',monospace;font-size:12px;color:var(--accent);font-weight:600;text-decoration:none;cursor:pointer;display:block">'+r.key+'</a></div>').join('');
+}
+function renderWorklogView(){
+  const key='2026/'+String(month).padStart(2,'0');
+  const records=wlGetAll();
+  const localRec=records.find(r=>r.key===key);
+  const csvContent=parseWorklog(month);
+  const viewEl=document.getElementById('worklogContent');
+  if(!viewEl)return;
+  
+  
+  if(localRec){
+    viewEl.innerHTML='<div style="font-size:12px;font-weight:600;font-family:\'Noto Serif TC\',serif;margin-bottom:8px;color:var(--accent)">'+localRec.title+'</div><div style="font-size:11px;color:var(--ink3);margin-bottom:14px">更新：'+localRec.updatedAt+'</div><div style="font-size:13px;line-height:1.8;color:var(--ink2);min-height:200px">'+localRec.html+'</div><div style="display:flex;gap:8px;margin-top:20px;padding-top:14px;border-top:1px solid var(--border);justify-content:flex-end"><button onclick="wlOpenModal(\''+key+'\'  )" style="font-size:12px;padding:5px 14px;border:1px solid var(--border2);border-radius:5px;background:var(--white);cursor:pointer;color:var(--blue);font-family:\'Noto Sans TC\',sans-serif">✏️ 編輯</button><button onclick="wlDelete(\''+key+'\')" style="font-size:12px;padding:5px 14px;border:1px solid var(--border2);border-radius:5px;background:var(--white);cursor:pointer;color:var(--accent3);font-family:\'Noto Sans TC\',sans-serif">🗑️ 刪除</button></div>';
+  } else if(csvContent){
+    viewEl.innerHTML='<div class="work-month-badge">2026 / '+String(month).padStart(2,'0')+'</div><div class="work-content">'+csvContent+'</div>';
+  } else {
+    viewEl.innerHTML='<div class="no-data">本月尚無紀錄</div>';
+  }
+  const listEl=document.getElementById('wl-record-list');
+  if(!listEl)return;
+  if(!records.length){listEl.innerHTML='<div style="font-size:12px;color:var(--ink4)">尚無儲存紀錄</div>';return;}
+  listEl.innerHTML=records.map(r=>'<div style="padding:5px 8px;border-radius:6px;transition:background .15s" onmouseover="this.style.background=\'var(--alight)\'" onmouseout="this.style.background=\'transparent\'"><a href="#" onclick="wlViewRecord(\''+r.key+'\');return false;" style="font-family:\'JetBrains Mono\',monospace;font-size:12px;color:var(--accent);font-weight:600;text-decoration:none;cursor:pointer;display:block">'+r.key+'</a></div>').join('');
+}
+function renderWorklog(){renderWorklogView();}
+
+
+function renderUtilization(){
+  const ud=parseUtil();const mi=month-1;
+  const ir=ud.depts.import?.[mi],sr=ud.depts.service?.[mi];
+  document.getElementById('utilKpiCards2').innerHTML=`
+    <div class="stat-card"><div class="stat-label">導入課 ${month}月利用率</div><div class="stat-val ${vcls(ir)}">${ir!=null?fmtP(ir):'—'}</div></div>
+    <div class="stat-card"><div class="stat-label">客服課 ${month}月利用率</div><div class="stat-val ${vcls(sr)}">${sr!=null?fmtP(sr):'—'}</div></div>
+    <div class="stat-card"><div class="stat-label">目標基準</div><div class="stat-val vg">85%</div></div>`;
+  const mL=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+  let ps=ud.persons;
+  mkChart('utilChart',{type:'line',data:{labels:mL,datasets:ps.map(p=>({label:p.name,data:p.rates,borderColor:gc(p.name),backgroundColor:gc(p.name)+'18',borderWidth:2,pointRadius:3,tension:.4,fill:false,spanGaps:true})).concat([{label:'目標85%',data:Array(12).fill(85),borderColor:'#ccc',borderWidth:1,borderDash:[4,4],pointRadius:0,fill:false}])},
+    options:{responsive:true,maintainAspectRatio:false,...cd,plugins:{...cd.plugins,tooltip:{...cd.plugins.tooltip,callbacks:{label:c=>` ${c.dataset.label}: ${c.raw!=null?fmtP(c.raw):'—'}`}}},scales:{...cd.scales,y:{...cd.scales.y,ticks:{...cd.scales.y.ticks,callback:v=>v+'%'},min:0,max:160}}}});
+  document.getElementById('personList').innerHTML=ps.map(p=>{
+    const r=p.rates[mi];
+    return`<div class="person-row"><div class="p-av" style="background:${gc(p.name)}18;color:${gc(p.name)}">${gi(p.name)}</div><span class="p-nm">${p.name}</span><div class="p-bar-w"><div class="p-bar-bg"><div class="p-bar-fill" style="width:${r!=null?Math.min(r/140*100,100):0}%;background:${gc(p.name)}"></div></div></div><span class="p-pct ${vcls(r)}">${r!=null?fmtP(r):'—'}</span></div>`;
+  }).join('')||'<div class="no-data">請匯入人力利用率資料</div>';
+  const importP=ud.persons.filter(p=>IMPORT_TEAM.includes(p.name));
+  const serviceP=ud.persons.filter(p=>SERVICE_TEAM.includes(p.name));
+  const allP=ud.persons;
+  document.getElementById('importTop3b').innerHTML=top3HTML(importP.length?importP:allP,mi);
+  document.getElementById('serviceTop3b').innerHTML=top3HTML(serviceP.length?serviceP:allP,mi);
+}
+
+function renderChannel(){
+  document.getElementById('chPageDesc').textContent=`${month}月數據`;
+  document.getElementById('channelDetailCard').innerHTML=buildChannelHTML(getChRow(2026,month),getChRow(2025,month));
+  const all26=getChAll(2026);const all25=getChAll(2025);
+  if(!all26.length)return;
+  const mLabels=all26.map(r=>r[0].replace('2026/',''));
+  const c=COL_CH;
+  const get25=(colIdx)=>all26.map(r=>{const m=parseInt(r[0].split('/')[1]);const r25=all25.find(x=>x[0]===ml25(m));return r25?ni(r25[colIdx]):null;});
+  mkChart('chServiceChart',{type:'line',data:{labels:mLabels,datasets:[
+    {label:'2025既有場域',data:get25(c.C),borderColor:'#9a9690',borderWidth:1.5,borderDash:[4,3],pointRadius:2,tension:.4,fill:false,spanGaps:true},
+    {label:'2025供應商服務',data:get25(c.P),borderColor:'#b8860b',borderWidth:1.5,borderDash:[4,3],pointRadius:2,tension:.4,fill:false,spanGaps:true},
+    {label:'2025通路服務',data:get25(c.AB),borderColor:'#808080',borderWidth:1.5,borderDash:[4,3],pointRadius:2,tension:.4,fill:false,spanGaps:true},
+    {label:'2026既有場域',data:all26.map(r=>ni(r[c.C])),borderColor:gc('Jo'),borderWidth:2,pointRadius:3,tension:.4,fill:false,spanGaps:true},
+    {label:'2026供應商服務',data:all26.map(r=>ni(r[c.P])),borderColor:gc('Johnny'),borderWidth:2,pointRadius:3,tension:.4,fill:false,spanGaps:true},
+    {label:'2026通路服務',data:all26.map(r=>ni(r[c.AB])),borderColor:gc('Hippo'),borderWidth:2,pointRadius:3,tension:.4,fill:false,spanGaps:true},
+  ]},options:{responsive:true,maintainAspectRatio:false,...cd}});
+  mkChart('chSalesChart',{type:'bar',data:{labels:mLabels,datasets:[
+    {label:'供應商核銷金額',data:all26.map(r=>ni(r[c.R])),backgroundColor:gc('Jo')+'bb',borderRadius:3},
+    {label:'通路銷售金額',data:all26.map(r=>ni(r[c.AD])),backgroundColor:gc('Hippo')+'bb',borderRadius:3},
+    {label:'B2C銷售金額',data:all26.map(r=>ni(r[c.AF])),backgroundColor:gc('Iris')+'bb',borderRadius:3},
+    {label:'B2B銷售金額',data:all26.map(r=>ni(r[c.AH])),backgroundColor:gc('Jine')+'bb',borderRadius:3},
+  ]},options:{responsive:true,maintainAspectRatio:false,...cd,scales:{x:{...cd.scales.x,stacked:true},y:{...cd.scales.y,stacked:true}}}});
+}
+
+function renderFullService(){
+  const yg=parseYearGrowth();
+  const mL=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+  const baseOpts={responsive:true,maintainAspectRatio:false,...cd};
+
+  function makeLineChart(id,y25,y26,label25,label26,color){
+    mkChart(id,{type:'line',data:{labels:mL,datasets:[
+      {label:label25,data:y25,borderColor:'#9a9690',backgroundColor:'rgba(154,150,144,.08)',borderWidth:2,borderDash:[5,3],pointRadius:3,tension:.4,fill:true,spanGaps:true},
+      {label:label26,data:y26,borderColor:color,backgroundColor:color+'18',borderWidth:2.5,pointRadius:3,tension:.4,fill:true,spanGaps:true},
+    ]},options:baseOpts});
+  }
+
+  if(yg){
+    makeLineChart('travelChart',yg.y25travel,yg.y26travel,'2025旅遊商品','2026旅遊商品',gc('Iris'));
+    makeLineChart('systemChart',yg.y25system,yg.y26system,'2025系統產品','2026系統產品',gc('Johnny'));
+    makeLineChart('specialChart',yg.y25special,yg.y26special,'2025專案服務產品','2026專案服務產品',gc('Jo'));
+
+    // 數據對照表（參照圖一）
+    const categories=[
+      {label:'旅遊商品累積上架數',y25:yg.y25travel,y26:yg.y26travel},
+      {label:'系統產品累積上架數',y25:yg.y25system,y26:yg.y26system},
+      {label:'專案服務產品累積上架數',y25:yg.y25special,y26:yg.y26special},
+    ];
+    let tblHtml=`<table class="product-table"><tr><th>項目</th>${mL.map(m=>`<th>${m}</th>`).join('')}</tr>`;
+    categories.forEach(cat=>{
+      tblHtml+=`<tr><td class="cat-label y25">${cat.label.replace('旅遊商品','2025旅遊商品').replace('系統產品','2025系統產品').replace('專案服務','2025專案服務')}</td>${cat.y25.map(v=>`<td class="y25">${v!=null?v:''}</td>`).join('')}</tr>`;
+      tblHtml+=`<tr><td class="cat-label y26">${cat.label.replace('旅遊商品','2026旅遊商品').replace('系統產品','2026系統產品').replace('專案服務','2026專案服務')}</td>${cat.y26.map(v=>`<td class="y26">${v!=null?v:''}</td>`).join('')}</tr>`;
+    });
+    tblHtml+='</table>';
+    document.getElementById('productTableWrap').innerHTML=`<div style="overflow-x:auto">${tblHtml}</div>`;
+  }
+
+  // 人員年度累積（從monthly ability計算）
+  const md=parseMonthly();
+  const shown=IMPORT_TEAM;
+  document.getElementById('uploadChips').innerHTML=shown.map(p=>{
+    const ab=md.ability[p];
+    const total=ab?ab.monthly.reduce((a,b)=>a+b,0):0;
+    return`<div class="upload-chip"><div class="chip-name" style="color:${gc(p)}">${p}</div><div class="chip-val" style="color:${gc(p)}">${fmt(total)}</div><div class="chip-sub">全服務年度累積</div></div>`;
+  }).join('');
+}
+
+function renderRanking(){
+  document.getElementById('sec3Desc').textContent=`依核銷金額｜${month}月`;
+  document.getElementById('sec4Desc').textContent=`依營收金額｜${month}月`;
+  const sup=parseSupplier(month);
+  document.getElementById('supplierList').innerHTML=!sup.length?'<div class="no-data">請匯入資料</div>':sup.map((r,i)=>renderRankingItem(r,i,false)).join('');
+  const ven=parseVenue(month);
+  document.getElementById('venueList').innerHTML=!ven.length?'<div class="no-data">請匯入資料</div>':ven.map((r,i)=>renderRankingItem(r,i,true)).join('');
+}
+
+function renderRelease(){
+  // X軸=各項目，Y軸=累積數，2025 vs 2026 曲線圖
+  const accum=parseReleaseAccum();
+  const notes=relGetNotes();
+  const LABELS=RELEASE_ITEMS;
+  const COLORS_REL={ft:gc('Jo'), fk:gc('Hippo'), tl:gc('Johnny')};
+  const SYS_NAMES={ft:'FonTour', fk:'FonTicket', tl:'Traveline'};
+
+  ['ft','fk','tl'].forEach(key=>{
+    const chartId=key+'Chart';
+    const noteEl=document.getElementById(key+'-note');
+    // 備註
+    if(noteEl) noteEl.innerHTML=notes[key]||'<span style="color:var(--ink4);font-size:12px">尚無備註，點右上角✏️編輯</span>';
+    if(!accum){
+      if(charts[chartId])charts[chartId].destroy();
+      return;
+    }
+    const d=accum[key];
+    const color=COLORS_REL[key];
+    // 曲線圖：X=項目, Y=累積數, 兩條線 2025/2026
+    mkChart(chartId,{
+      type:'line',
+      data:{
+        labels:LABELS,
+        datasets:[
+          {label:'2025年累積',data:d.y25,borderColor:'#9a9690',backgroundColor:'rgba(154,150,144,.08)',
+           borderWidth:2,borderDash:[5,3],pointRadius:5,pointHoverRadius:7,tension:.3,fill:true},
+          {label:'2026年累積',data:d.y26,borderColor:color,backgroundColor:color+'18',
+           borderWidth:2.5,pointRadius:5,pointHoverRadius:7,tension:.3,fill:true},
+        ]
+      },
+      options:{
+        responsive:true,maintainAspectRatio:false,
+        plugins:{
+          legend:{labels:{color:'#4a4844',font:{size:11,family:'Noto Sans TC'},boxWidth:12}},
+          tooltip:{
+            backgroundColor:'#fff',borderColor:'#e2dfd8',borderWidth:1,
+            titleColor:'#1a1916',bodyColor:'#4a4844',
+            callbacks:{
+              title:ctx=>ctx[0].label,
+              label:ctx=>' '+ctx.dataset.label+': '+ctx.raw
+            }
+          },
+          title:{display:true,text:SYS_NAMES[key]+' Release 年度累積對比',color:'#1a1916',font:{size:13,family:'Noto Serif TC',weight:'600'}}
+        },
+        scales:{
+          x:{grid:{color:'#f0ede8'},ticks:{color:'#9a9690',font:{size:11}}},
+          y:{grid:{color:'#f0ede8'},ticks:{color:'#9a9690',font:{size:10},stepSize:1},beginAtZero:true,
+            title:{display:true,text:'累積件數',color:'#9a9690',font:{size:10}}}
+        }
+      }
+    });
+  });
+  if(!accum){
+    document.querySelectorAll('#ft-note,#fk-note,#tl-note').forEach(el=>{
+      el.innerHTML='<span style="color:var(--ink4);font-size:12px">請匯入「Release年度累積數」CSV（對應 Release(FonTour) 匯入按鈕）</span>';
+    });
+  }
+}
+
+// ══════════════════════════════════════
+//  個人工作表現
+// ══════════════════════════════════════
+function buildPersonalTabs(){
+  const el=document.getElementById('personalTabs');
+  el.innerHTML=ALL_PERSONS.map(p=>`<div class="ptab${p===selectedPerson?' active':''}" onclick="selectPerson('${p}')">${p}</div>`).join('');
+}
+function selectPerson(name){
+  selectedPerson=name;
+  buildPersonalTabs();
+  renderPersonalContent();
+}
+function renderPersonalContent(){
+  const el=document.getElementById('personalContent');
+  if(!selectedPerson){el.innerHTML='<div class="no-data">請先選擇人員</div>';return;}
+  const md=parseMonthly();
+  const ud=parseUtil();
+  const mL=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+  let html='';
+
+  // 1. 個人月利用率
+  const personUtil=ud.persons.find(p=>p.name===selectedPerson);
+  if(personUtil){
+    html+=`<div class="card" style="margin-bottom:14px">
+      <div class="personal-section-title">📊 個人月利用率（目標：85%）</div>
+      <div class="case-rate-grid">${mL.map((ml,i)=>{
+        const v=personUtil.rates[i];
+        const cls=v==null?'crm-na':v>=85?'crm-hit':'crm-miss';
+        return`<div class="case-rate-card"><div class="crm-label">${ml}</div><div class="crm-val ${cls}">${v!=null?v.toFixed(1)+'%':'—'}</div></div>`;
+      }).join('')}</div>
+    </div>`;
+  }
+
+  // 2. 標準化文件達成率
+  const stdDoc=md.stdDoc[selectedPerson];
+  if(stdDoc){
+    const done=stdDoc.monthly.reduce((a,b)=>a+b,0);
+    const pct=stdDoc.target>0?Math.min(done/stdDoc.target*100,100):0;
+    html+=`<div class="card" style="margin-bottom:14px">
+      <div class="personal-section-title">📄 標準化文件達成率（目標：${stdDoc.target} 份）</div>
+      <div style="height:6px;background:var(--bg2);border-radius:3px;overflow:hidden;margin-bottom:8px"><div style="height:100%;width:${pct}%;background:linear-gradient(90deg,var(--accent),#4a9a7a);border-radius:3px;transition:width 1s ease"></div></div>
+      <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:10px">
+        <span style="color:var(--ink3)">累積：<b style="color:var(--ink)">${done}</b> 份</span>
+        <span style="color:${pct>=100?'var(--accent)':'var(--ink)'};font-weight:600">${pct.toFixed(1)}%</span>
+      </div>
+      <div class="ab-monthly">${stdDoc.monthly.map((v,i)=>{const cls=i>=month?'ab-future':v>0?'ab-done':'ab-zero';return`<div class="ab-dot ${cls}">${v||''}</div>`;}).join('')}</div>
+    </div>`;
+  }
+
+  // 3. 每月結案率
+  const caseRate=md.caseRate[selectedPerson];
+  if(caseRate&&caseRate.some(v=>v!=null)){
+    html+=`<div class="card" style="margin-bottom:14px">
+      <div class="personal-section-title">✅ 每月結案率</div>
+      <div class="case-rate-grid">${mL.map((ml,i)=>{
+        const v=caseRate[i];
+        const cls=v==null?'crm-na':v>=99?'crm-hit':'crm-miss';
+        return`<div class="case-rate-card"><div class="crm-label">${ml}</div><div class="crm-val ${cls}">${v!=null?v.toFixed(1)+'%':'—'}</div></div>`;
+      }).join('')}</div>
+    </div>`;
+  }
+
+  // 4. 提升個人能力
+  const ab=md.ability[selectedPerson];
+  if(ab){
+    const done=ab.monthly.reduce((a,b)=>a+b,0);
+    const pct=ab.target>0?Math.min(done/ab.target*100,100):0;
+    html+=`<div class="card" style="margin-bottom:14px">
+      <div class="personal-section-title">🌱 提升個人能力（目標：${ab.target} 次）</div>
+      <div style="height:6px;background:var(--bg2);border-radius:3px;overflow:hidden;margin-bottom:8px"><div style="height:100%;width:${pct}%;background:linear-gradient(90deg,var(--accent),#4a9a7a);border-radius:3px"></div></div>
+      <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:10px">
+        <span style="color:var(--ink3)">累積：<b style="color:var(--ink)">${done}</b> 次</span>
+        <span style="color:${pct>=100?'var(--accent)':'var(--ink)'};font-weight:600">${pct.toFixed(1)}%</span>
+      </div>
+      <div class="ab-monthly">${ab.monthly.map((v,i)=>{const cls=i>=month?'ab-future':v>0?'ab-done':'ab-zero';return`<div class="ab-dot ${cls}">${v||''}</div>`;}).join('')}</div>
+    </div>`;
+  }
+
+  // 5. 既有客戶諮詢服務時間（僅 Iris, Jo, Johnny）
+  if(CONSULT_PERSONS.includes(selectedPerson)){
+    const consult=md.consult[selectedPerson];
+    if(consult){
+      const target=consult.target;
+      html+=`<div class="card" style="margin-bottom:14px">
+        <div class="personal-section-title">⏱️ 既有客戶平均每月諮詢服務時間（目標：≤ ${target} 分鐘）</div>
+        <table class="consult-table">
+          <tr><th>月份</th>${mL.map(m=>`<th>${m}</th>`).join('')}</tr>
+          <tr><td style="font-weight:600;font-family:'Noto Sans TC'">服務時間(分)</td>${consult.monthly.map(v=>`<td>${v||'—'}</td>`).join('')}</tr>
+          <tr><td style="font-weight:600;font-family:'Noto Sans TC'">目標達成</td>${consult.monthly.map((v,i)=>{
+            if(!v||i>=month)return`<td style="color:var(--ink4)">—</td>`;
+            return v<=target?`<td class="consult-hit">達標</td>`:`<td class="consult-miss">${v}</td>`;
+          }).join('')}</tr>
+        </table>
+      </div>`;
+    }
+  }
+
+  el.innerHTML=html||`<div class="no-data">請匯入相關資料（每月業績 / 人力利用率）</div>`;
+}
+
+function renderPersonal(){
+  buildPersonalTabs();
+  renderPersonalContent();
+}
+
+function renderPage(p){
+  if(p==='overview')renderOverview();
+  else if(p==='worklog')renderWorklog();
+  else if(p==='utilization')renderUtilization();
+  else if(p==='channel')renderChannel();
+  else if(p==='fullservice')renderFullService();
+  else if(p==='ranking')renderRanking();
+  else if(p==='release')renderRelease();
+  else if(p==='personal')renderPersonal();
+}
+function renderAll(){renderPage(currentPage);}
+
+function switchView(v){
+  view=v;
+  document.querySelectorAll('.vbtn').forEach(b=>b.classList.remove('active'));
+  document.querySelector(`.vbtn[onclick*="${v}"]`).classList.add('active');
+  renderAll();
+}
+function onMonthChange(){month=parseInt(document.getElementById('monthSelect').value);renderAll();}
+
+renderAll();
+</script>
+</body>
+</html>
